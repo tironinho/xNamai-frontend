@@ -12,16 +12,14 @@ import ExpandMoreRoundedIcon from "@mui/icons-material/ExpandMoreRounded";
 import ExpandLessRoundedIcon from "@mui/icons-material/ExpandLessRounded";
 import logoNewStore from "./Logo-branca-sem-fundo-768x132.png";
 import { useAuth } from "./authContext";
+import { API_CONFIG } from "./config/api";
 
 const theme = createTheme({
   palette: { mode: "dark", background: { default: "#0E0E0E", paper: "#121212" } },
 });
 
 /* ---------- API base normalizada (mesma lógica do AccountPage) ---------- */
-const RAW_BASE =
-  process.env.REACT_APP_API_BASE_URL ||
-  process.env.REACT_APP_API_BASE ||
-  "/api";
+const RAW_BASE = API_CONFIG.baseUrl || "/api";
 
 function normalizeApiBase(b) {
   if (!b) return "/api";

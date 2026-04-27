@@ -12,6 +12,7 @@ import DownloadRoundedIcon from "@mui/icons-material/DownloadRounded";
 import JSZip from "jszip";
 import logoNewStore from "./Logo-branca-sem-fundo-768x132.png";
 import { useAuth } from "./authContext";
+import { API_CONFIG } from "./config/api";
 
 /* ---------- tema ---------- */
 const theme = createTheme({
@@ -21,10 +22,7 @@ const theme = createTheme({
 });
 
 /* ---------- helpers de API (iguais ao AdminDashboard) ---------- */
-const RAW_BASE =
-  process.env.REACT_APP_API_BASE_URL ||
-  process.env.REACT_APP_API_BASE ||
-  "/api";
+const RAW_BASE = API_CONFIG.baseUrl || "/api";
 const API_BASE = String(RAW_BASE).replace(/\/+$/, "");
 
 const apiJoin = (path) => {

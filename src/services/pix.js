@@ -1,11 +1,13 @@
 // src/services/pix.js
 // Serviço PIX desacoplado da UI. Suporta backend real (Render) e mock local.
 
+import { API_CONFIG } from "../config/api";
+
 const API_BASE =
-  (process.env.REACT_APP_API_BASE ||
-    process.env.REACT_APP_API_BASE_URL ||
-    'https://newstore-backend.onrender.com'
-  ).replace(/\/+$/, '');
+  String(API_CONFIG.baseUrl || "https://newstore-backend.onrender.com").replace(
+    /\/+$/,
+    ""
+  );
 
 const USE_BACKEND =
   String(process.env.REACT_APP_USE_BACKEND || (process.env.REACT_APP_AUTH_PROVIDER === 'backend'))

@@ -22,6 +22,7 @@ import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
 import StarRoundedIcon from "@mui/icons-material/StarRounded";
 import LockRoundedIcon from "@mui/icons-material/LockRounded";
 import ScheduleRoundedIcon from "@mui/icons-material/ScheduleRounded";
+import { API_CONFIG } from "./config/api";
 
 const theme = createTheme({
   palette: {
@@ -49,9 +50,7 @@ const theme = createTheme({
   },
 });
 
-const API = (process.env.REACT_APP_API_BASE_URL ||
-  process.env.REACT_APP_API_BASE ||
-  "/api").replace(/\/+$/, "");
+const API = String(API_CONFIG.baseUrl || "/api").replace(/\/+$/, "");
 
 const authHeaders = () => {
   const tk =

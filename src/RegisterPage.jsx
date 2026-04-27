@@ -17,6 +17,7 @@ import {
 } from '@mui/material';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
+import { apiUrl } from "./config/api";
 
 const theme = createTheme({
   palette: {
@@ -31,21 +32,6 @@ const theme = createTheme({
     fontFamily: ['Inter', 'system-ui', 'Segoe UI', 'Roboto', 'Arial'].join(','),
   },
 });
-
-/* ===== helpers de API (com fallback para o backend real) ===== */
-const RAW =
-  process.env.REACT_APP_API_BASE ||
-  process.env.REACT_APP_API_BASE_URL ||
-  'https://newstore-backend.onrender.com';
-
-const ROOT = String(RAW).replace(/\/+$/, '');
-const API_BASE = /\/api$/i.test(ROOT) ? ROOT : `${ROOT}/api`;
-
-function apiUrl(path) {
-  let p = path.startsWith('/') ? path : `/${path}`;
-  if (API_BASE.endsWith('/api') && p.startsWith('/api/')) p = p.slice(4);
-  return `${API_BASE}${p}`;
-}
 
 async function postJson(path, body) {
   const res = await fetch(apiUrl(path), {
@@ -67,7 +53,7 @@ async function registerRequest({ name, email, password, phone }) {
     phone: String(phone || '').trim(),
   };
 
-  const paths = ['/auth/register', '/register', '/users/register'];
+  const paths = ['/api/auth/register', '/api/register', '/api/users/register'];
   let lastErr;
   for (const p of paths) {
     try {

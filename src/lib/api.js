@@ -1,10 +1,9 @@
 // Util de API para o frontend (React)
 
-// 1) Leia UMA variável de base. Não use BASE_URL junto.
-const RAW =
-  process.env.REACT_APP_API_BASE ||
-  process.env.REACT_APP_API_BASE_URL || // se alguém esquecer de tirar, ainda respeitamos
-  "";
+import { API_CONFIG } from "../config/api";
+
+// 1) Base do backend (sem /api no final; este util adiciona)
+const RAW = API_CONFIG.baseUrl || "";
 
 // 2) Normaliza a raiz (sem barra final)
 const ROOT = String(RAW || "").replace(/\/+$/, "");

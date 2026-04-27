@@ -10,6 +10,7 @@ import ArrowBackIosNewRoundedIcon from "@mui/icons-material/ArrowBackIosNewRound
 import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
 import logoNewStore from "./Logo-branca-sem-fundo-768x132.png";
 import { useAuth } from "./authContext";
+import { API_CONFIG } from "./config/api";
 
 const theme = createTheme({
   palette: {
@@ -21,10 +22,7 @@ const theme = createTheme({
 });
 
 /* ---------- API base util ---------- */
-const RAW_BASE =
-  process.env.REACT_APP_API_BASE_URL ||
-  process.env.REACT_APP_API_BASE ||
-  "/api";
+const RAW_BASE = API_CONFIG.baseUrl || "/api";
 const API_BASE = String(RAW_BASE).replace(/\/+$/, "");
 const apiJoin = (path) => {
   let p = path.startsWith("/") ? path : `/${path}`;

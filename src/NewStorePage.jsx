@@ -8,6 +8,7 @@ import { SelectionContext } from "./selectionContext";
 import PixModal from "./PixModal";
 import { createPixPayment, checkPixStatus } from "./services/pix";
 import { useAuth } from "./authContext";
+import { API_CONFIG } from "./config/api";
 
 import {
    List, ListItem, ListItemText,
@@ -75,10 +76,8 @@ const MOCK_RESERVADOS = [];
 const MOCK_INDISPONIVEIS = [];
 
 // Base do backend
-const API_BASE = (
-  process.env.REACT_APP_API_BASE_URL ||
-  process.env.REACT_APP_API_BASE ||
-  "https://newstore-backend.onrender.com"
+const API_BASE = String(
+  API_CONFIG.baseUrl || "https://newstore-backend.onrender.com"
 ).replace(/\/+$/, "");
 
 // ===== Helpers de auth + reserva =====

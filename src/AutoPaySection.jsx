@@ -18,6 +18,7 @@ import AutorenewRoundedIcon from "@mui/icons-material/AutorenewRounded";
 import ClearRoundedIcon from "@mui/icons-material/ClearRounded";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { authHeaders as _authHeaders } from "./lib/api";
+import { API_CONFIG } from "./config/api";
 import {
   tokenizeCardWithVindi,
   setupAutopayVindi,
@@ -29,10 +30,7 @@ const IS_DEV = process.env.NODE_ENV !== "production";
 const ADMIN_EMAIL = "admin@newstore.com.br";
 
 const apiJoin = (p) => {
-  const base =
-    process.env.REACT_APP_API_BASE_URL ||
-    process.env.REACT_APP_API_BASE ||
-    "/api";
+  const base = API_CONFIG.baseUrl || "/api";
   return `${String(base).replace(/\/+$/, "")}${p.startsWith("/") ? p : `/${p}`}`;
 };
 

@@ -1,5 +1,7 @@
+import { API_CONFIG } from "../config/api";
+
 // Centraliza chamadas e injeta Authorization se houver JWT salvo
-const API = (process.env.REACT_APP_API_BASE_URL || '').replace(/\/$/, '');
+const API = String(API_CONFIG.baseUrl || "").replace(/\/$/, "");
 
 export async function api(path, { method = 'GET', body, params } = {}) {
   const token = localStorage.getItem('ns_auth_token') || sessionStorage.getItem('ns_auth_token');
