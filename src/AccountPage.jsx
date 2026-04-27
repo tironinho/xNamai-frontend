@@ -741,7 +741,7 @@ export default function AccountPage() {
                 alignItems: "center",
               }}
             >
-              <Box component="img" src={logoNewStore} alt="NEW STORE" sx={{ height: { xs: 42, sm: 58, md: 62 }, objectFit: "contain" }} />
+              <Box component="img" src={logoNewStore} alt="xNaMai Sorteios" sx={{ height: { xs: 42, sm: 58, md: 62 }, objectFit: "contain" }} />
             </Box>
           <IconButton color="inherit" sx={{ ml: "auto" }} onClick={(e) => setMenuEl(e.currentTarget)}>
             <AccountCircleRoundedIcon />

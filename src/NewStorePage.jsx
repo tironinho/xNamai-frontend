@@ -3,7 +3,6 @@
 
 import * as React from "react";
 import { useNavigate, Link as RouterLink } from "react-router-dom";
-import logoNewStore from "./Logo-branca-sem-fundo-768x132.png";
 import { SelectionContext } from "./selectionContext";
 import PixModal from "./PixModal";
 import { createPixPayment, checkPixStatus } from "./services/pix";
@@ -20,6 +19,7 @@ import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 import GiftCardSimulator from "./components/GiftCardSimulator.jsx";
+import NeonLinesBackground from "./components/NeonLinesBackground";
 
 import {
   AppBar,
@@ -28,6 +28,7 @@ import {
   Chip,
   Container,
   CssBaseline,
+  Drawer,
   Dialog,
   DialogActions,
   DialogContent,
@@ -45,6 +46,8 @@ import {
   createTheme,
 } from "@mui/material";
 import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
+import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
+import LockRoundedIcon from "@mui/icons-material/LockRounded";
 
 // Imagens locais
 import imgCardExemplo from "./cartaoilustrativoTexto-do-seu-paragrafo-6-1024x1024.png";
@@ -56,11 +59,11 @@ import imgAcumulo2 from "./2-1-1-1024x512.png";
 const theme = createTheme({
   palette: {
     mode: "dark",
-    primary: { main: "#67C23A" },
-    secondary: { main: "#FFC107" },
-    error: { main: "#D32F2F" },
-    background: { default: "#0E0E0E", paper: "#121212" },
-    success: { main: "#59b15f" },
+    primary: { main: "#2DE2E6" },     // neon azul
+    secondary: { main: "#FF2E93" },   // neon rosa
+    error: { main: "#FF3B5C" },
+    background: { default: "#070712", paper: "#0B0B16" },
+    success: { main: "#31F7A5" },
   },
   shape: { borderRadius: 12 },
   typography: {
@@ -180,7 +183,29 @@ export default function NewStorePage({
     React.useContext(SelectionContext);
   const { user, token, logout } = useAuth();
   const isAuthenticated = !!(user?.email || user?.id || token);
-  const logoTo = isAuthenticated ? "/conta" : "/";
+  const [mobileNavOpen, setMobileNavOpen] = React.useState(false);
+
+  const navItems = React.useMemo(
+    () => [
+      { id: "inicio", label: "Início" },
+      { id: "sobre", label: "Sobre o Sorteio" },
+      { id: "produtos", label: "Produtos" },
+      { id: "como-funciona", label: "Como Funciona" },
+      { id: "duvidas", label: "Dúvidas" },
+      { id: "contato", label: "Contato" },
+    ],
+    []
+  );
+
+  const scrollToSection = React.useCallback((id) => {
+    try {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+    } finally {
+      setMobileNavOpen(false);
+    }
+  }, []);
 
   // Estados vindos do backend
   const [srvReservados, setSrvReservados] = React.useState([]);
@@ -269,7 +294,7 @@ export default function NewStorePage({
       alive = false;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [API_BASE]);
+  }, []);
 
   // Refetch imediato quando um novo sorteio for criado/aberto (admin)
   React.useEffect(() => {
@@ -288,7 +313,7 @@ export default function NewStorePage({
     };
     window.addEventListener("ns:draw:changed", onDrawChanged);
     return () => window.removeEventListener("ns:draw:changed", onDrawChanged);
-  }, [API_BASE]);
+  }, []);
 
   // Polling leve de /api/numbers (sem Content-Type p/ não gerar preflight)
   const reloadSrvNumbers = React.useCallback(async () => {
@@ -326,7 +351,7 @@ export default function NewStorePage({
     } catch {
       /* silencioso */
     }
-  }, [API_BASE]);
+  }, []);
 
   React.useEffect(() => {
     let alive = true;
@@ -558,49 +583,94 @@ export default function NewStorePage({
     <ThemeProvider theme={theme}>
       <CssBaseline />
 
+      <Box
+        sx={{
+          minHeight: "100vh",
+          position: "relative",
+          isolation: "isolate",
+        }}
+      >
+        <NeonLinesBackground />
+
+        {/* content layer */}
+        <Box sx={{ position: "relative", zIndex: 1 }}>
       {/* Topo */}
       <AppBar
         position="sticky"
         elevation={0}
-        sx={{ borderBottom: "1px solid rgba(255,255,255,0.08)" }}
+        sx={{
+          borderBottom: "1px solid rgba(255,255,255,0.08)",
+          background:
+            "linear-gradient(180deg, rgba(7,7,18,0.92) 0%, rgba(7,7,18,0.70) 100%)",
+          backdropFilter: "saturate(160%) blur(10px)",
+        }}
       >
         <Toolbar sx={{ position: "relative", minHeight: 64 }}>
-          <IconButton edge="start" color="inherit">
-            {/* espaçamento */}
+          <IconButton
+            edge="start"
+            color="inherit"
+            onClick={() => setMobileNavOpen(true)}
+            sx={{ display: { xs: "inline-flex", md: "none" } }}
+            aria-label="Abrir menu"
+          >
+            <MenuRoundedIcon />
           </IconButton>
 
           <Button
-            component={RouterLink}
-            to="/cadastro"
+            onClick={() => scrollToSection("inicio")}
             variant="text"
-            sx={{ fontWeight: 700, mt: 1 }}
+            sx={{
+              px: 0,
+              mr: 2,
+              fontWeight: 900,
+              letterSpacing: 0.6,
+              textTransform: "none",
+              color: "rgba(255,255,255,0.92)",
+              "&:hover": { bgcolor: "transparent" },
+            }}
           >
-            Criar conta
+            xNaMai Sorteios
           </Button>
 
-          <Box
-            component={RouterLink}
-            to={logoTo}
-            onClick={(e) => {
-              e.preventDefault();
-              navigate(logoTo);
-            }}
+          <Stack
+            direction="row"
+            spacing={0.5}
+            alignItems="center"
             sx={{
-              position: "absolute",
-              left: "50%",
-              top: "50%",
-              transform: "translate(-50%, -50%)",
-              display: "flex",
-              alignItems: "center",
+              display: { xs: "none", md: "flex" },
+              mx: "auto",
+              px: 1,
+              py: 0.5,
+              borderRadius: 999,
+              border: "1px solid rgba(255,255,255,0.10)",
+              background:
+                "linear-gradient(90deg, rgba(45,226,230,0.08), rgba(255,46,147,0.08))",
             }}
           >
-            <Box
-              component="img"
-              src={logoNewStore}
-              alt="NEW STORE"
-              sx={{ height: 40, objectFit: "contain" }}
-            />
-          </Box>
+            {navItems.map((it) => (
+              <Button
+                key={it.id}
+                onClick={() => scrollToSection(it.id)}
+                variant="text"
+                sx={{
+                  borderRadius: 999,
+                  px: 1.6,
+                  py: 0.7,
+                  fontWeight: 800,
+                  textTransform: "none",
+                  color: it.id === "inicio" ? "secondary.main" : "rgba(255,255,255,0.78)",
+                  bgcolor: it.id === "inicio" ? "rgba(255,46,147,0.10)" : "transparent",
+                  border: it.id === "inicio" ? "1px solid rgba(255,46,147,0.28)" : "1px solid transparent",
+                  "&:hover": {
+                    bgcolor: "rgba(255,255,255,0.06)",
+                    borderColor: "rgba(255,255,255,0.12)",
+                  },
+                }}
+              >
+                {it.label}
+              </Button>
+            ))}
+          </Stack>
 
           <IconButton color="inherit" sx={{ ml: "auto" }} onClick={handleOpenMenu}>
             <AccountCircleRoundedIcon />
@@ -625,45 +695,202 @@ export default function NewStorePage({
         </Toolbar>
       </AppBar>
 
+      <Drawer
+        anchor="left"
+        open={mobileNavOpen}
+        onClose={() => setMobileNavOpen(false)}
+        PaperProps={{
+          sx: {
+            width: 280,
+            bgcolor: "background.paper",
+            borderRight: "1px solid rgba(255,255,255,0.08)",
+            backgroundImage:
+              "radial-gradient(120% 80% at 20% 20%, rgba(45,226,230,0.10) 0%, transparent 60%), radial-gradient(120% 80% at 80% 40%, rgba(255,46,147,0.10) 0%, transparent 60%)",
+          },
+        }}
+      >
+        <Stack spacing={1} sx={{ p: 2 }}>
+          <Typography sx={{ fontWeight: 900, letterSpacing: 0.6 }}>
+            xNaMai Sorteios
+          </Typography>
+          <Divider sx={{ borderColor: "rgba(255,255,255,0.10)" }} />
+          {navItems.map((it) => (
+            <Button
+              key={it.id}
+              onClick={() => scrollToSection(it.id)}
+              sx={{
+                justifyContent: "flex-start",
+                fontWeight: 800,
+                textTransform: "none",
+                color: "rgba(255,255,255,0.88)",
+              }}
+            >
+              {it.label}
+            </Button>
+          ))}
+          {!isAuthenticated && (
+            <Button
+              component={RouterLink}
+              to="/cadastro"
+              variant="contained"
+              sx={{
+                mt: 1,
+                fontWeight: 900,
+                borderRadius: 999,
+                background:
+                  "linear-gradient(90deg, rgba(45,226,230,1) 0%, rgba(255,46,147,1) 100%)",
+                color: "#0B0B16",
+              }}
+            >
+              Criar conta
+            </Button>
+          )}
+        </Stack>
+      </Drawer>
+
       {/* Conteúdo */}
-      <Container maxWidth="lg" sx={{ py: { xs: 4, md: 6 } }}>
+      <Container maxWidth="lg" sx={{ py: { xs: 6, md: 9 } }}>
         <Stack spacing={4}>
-          <Paper variant="outlined" sx={{ p: { xs: 2, md: 3 } }}>
+          <Box id="inicio" />
+
+          <Paper
+            variant="outlined"
+            sx={{
+              p: { xs: 2.5, md: 4 },
+              borderRadius: 4,
+              borderColor: "rgba(255,255,255,0.10)",
+              bgcolor: "rgba(11,11,22,0.56)",
+              backdropFilter: "blur(10px)",
+              backgroundImage:
+                "radial-gradient(120% 120% at 10% 10%, rgba(45,226,230,0.14) 0%, transparent 55%), radial-gradient(140% 120% at 95% 15%, rgba(255,46,147,0.14) 0%, transparent 55%), linear-gradient(180deg, rgba(11,11,22,0.92) 0%, rgba(11,11,22,0.70) 100%)",
+              boxShadow:
+                "0 0 0 1px rgba(45,226,230,0.10), 0 0 22px rgba(45,226,230,0.10), 0 0 28px rgba(255,46,147,0.08)",
+            }}
+          >
             <Stack spacing={2}>
-              <Typography variant="h3" fontWeight={900}>
-                Bem-vindos ao Sorteio da{" "}
-                <Box component="span" sx={{ opacity: 0.85 }}>
-                  New Store
-                </Box>{" "}
-                Relógios!
-              </Typography>
-              <Typography variant="h5" fontWeight={900}>
-                “Participe, concorra e ainda receba 100% do valor de volta.”
-              
-              </Typography>
-              <Typography variant="h6" sx={{ opacity: 0.9 }}>
-                A New Store apresenta o único sorteio em que você nunca sai perdendo.
-Ao participar, você garante uma vaga na disputa por <strong>R$ 5.000 em créditos</strong>, e ainda transforma o valor da sua participação em um Cartão Presente Digital, válido para compras em todo o site.
-⏳ Sorteio válido até o preenchimento total da tabela.
-Baseado no resultado oficial da Lotomania (Caixa Econômica Federal).
-              </Typography>
+              <Stack
+                direction={{ xs: "column", md: "row" }}
+                spacing={{ xs: 2.5, md: 3 }}
+                alignItems="stretch"
+              >
+                <Stack spacing={1.6} sx={{ flex: 1 }}>
+                  <Typography
+                    variant="h3"
+                    sx={{
+                      fontWeight: 950,
+                      letterSpacing: -0.6,
+                      lineHeight: 1.05,
+                    }}
+                  >
+                    Bem-vindos ao Sorteio da{" "}
+                    <Box
+                      component="span"
+                      sx={{
+                        background:
+                          "linear-gradient(90deg, rgba(45,226,230,1), rgba(255,46,147,1))",
+                        WebkitBackgroundClip: "text",
+                        backgroundClip: "text",
+                        WebkitTextFillColor: "transparent",
+                        textShadow: "0 0 18px rgba(45,226,230,0.18)",
+                      }}
+                    >
+                      xNaMai
+                    </Box>
+                  </Typography>
+
+                  <Typography
+                    variant="h5"
+                    sx={{ fontWeight: 900, color: "rgba(255,255,255,0.92)" }}
+                  >
+                    “Participe, concorra e ainda receba 100% do valor de volta.”
+                  </Typography>
+
+                  <Typography variant="body1" sx={{ opacity: 0.92, maxWidth: 720 }}>
+                    A xNaMai apresenta o único sorteio em que você nunca sai perdendo. Ao
+                    participar, você garante uma vaga na disputa por{" "}
+                    <strong>R$ 5.000 em créditos</strong>, e ainda transforma o valor da sua
+                    participação em um Cartão Presente Digital, válido para compras em todo o
+                    site.
+                  </Typography>
+
+                  <Typography variant="body2" sx={{ opacity: 0.75 }}>
+                    Sorteio válido até o preenchimento total da tabela. Baseado no resultado
+                    oficial da Loteria Federal (Caixa Econômica Federal).
+                  </Typography>
+                </Stack>
+
+                <Paper
+                  variant="outlined"
+                  sx={{
+                    width: { xs: "100%", md: 360 },
+                    borderRadius: 4,
+                    borderColor: "rgba(255,255,255,0.10)",
+                    background:
+                      "linear-gradient(180deg, rgba(255,46,147,0.10) 0%, rgba(45,226,230,0.08) 100%)",
+                    boxShadow:
+                      "0 0 0 1px rgba(255,46,147,0.18), 0 0 26px rgba(255,46,147,0.12), 0 0 22px rgba(45,226,230,0.10)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    p: 3,
+                    minHeight: 180,
+                  }}
+                >
+                  <Stack spacing={0.8} alignItems="center">
+                    <Typography
+                      sx={{
+                        fontWeight: 1000,
+                        letterSpacing: 2,
+                        fontSize: 34,
+                        textTransform: "uppercase",
+                        background:
+                          "linear-gradient(90deg, rgba(255,46,147,1), rgba(166,66,255,1), rgba(45,226,230,1))",
+                        WebkitBackgroundClip: "text",
+                        backgroundClip: "text",
+                        WebkitTextFillColor: "transparent",
+                      }}
+                    >
+                      xNaMai
+                    </Typography>
+                    <Typography sx={{ opacity: 0.85, fontWeight: 800 }}>
+                      Sorteios
+                    </Typography>
+                    <Typography variant="caption" sx={{ opacity: 0.7, textAlign: "center" }}>
+                      Premium • Futurista • Neon
+                    </Typography>
+                  </Stack>
+                </Paper>
+              </Stack>
             </Stack>
           </Paper>
 
           {/* === CARTELA === */}
           <Paper
             variant="outlined"
-            sx={{ p: { xs: 1.5, md: 3 }, bgcolor: "background.paper" }}
+            sx={{
+              p: { xs: 1.5, md: 3 },
+              borderRadius: 4,
+              borderColor: "rgba(255,255,255,0.10)",
+              bgcolor: "rgba(11,11,22,0.58)",
+              backdropFilter: "blur(10px)",
+              boxShadow:
+                "0 0 0 1px rgba(45,226,230,0.10), 0 0 26px rgba(45,226,230,0.10), 0 0 26px rgba(255,46,147,0.08)",
+              backgroundImage:
+                "radial-gradient(120% 80% at 12% 0%, rgba(45,226,230,0.10) 0%, transparent 55%), radial-gradient(120% 80% at 88% 8%, rgba(255,46,147,0.10) 0%, transparent 55%)",
+            }}
           >
+            <Box id="sobre" />
             {/* >>>>> BANNER SUPERIOR (dinâmico) */}
             <Box
               sx={{
                 mb: 2,
                 p: { xs: 1.25, md: 1.5 },
-                borderRadius: 2,
-                border: "1px solid rgba(255,255,255,0.12)",
+                borderRadius: 3,
+                border: "1px solid rgba(255,255,255,0.10)",
                 background:
-                  "linear-gradient(90deg, rgba(103,194,58,0.12), rgba(255,193,7,0.10))",
+                  "linear-gradient(90deg, rgba(45,226,230,0.12), rgba(166,66,255,0.10), rgba(255,46,147,0.12))",
+                boxShadow:
+                  "0 0 0 1px rgba(255,46,147,0.10), 0 0 18px rgba(45,226,230,0.10)",
               }}
             >
               <Typography
@@ -672,22 +899,22 @@ Baseado no resultado oficial da Lotomania (Caixa Econômica Federal).
                   fontWeight: 900,
                   textAlign: "center",
                   letterSpacing: 1,
-                  background: "linear-gradient(90deg, #67C23A, #FFC107)",
+                  background:
+                    "linear-gradient(90deg, rgba(45,226,230,1), rgba(166,66,255,1), rgba(255,46,147,1))",
                   WebkitBackgroundClip: "text",
                   backgroundClip: "text",
                   WebkitTextFillColor: "transparent",
-                  textShadow: "0 0 12px rgba(103,194,58,0.18)",
+                  textShadow: "0 0 18px rgba(45,226,230,0.16)",
                 }}
               >
-                {bannerTitle ||
-                  "Sorteio de um Watch Winder Caixa de Suporte Rotativo Para Relógios Automáticos"}
+                {bannerTitle || "SORTEIO TISSOT PRX DAMASCUS"}
               </Typography>
             </Box>
 
             <Stack
               direction={{ xs: "column", md: "row" }}
-              spacing={1.5}
-              alignItems="center"
+              spacing={2}
+              alignItems={{ xs: "stretch", md: "center" }}
               justifyContent="space-between"
               sx={{ mb: 2 }}
             >
@@ -695,28 +922,31 @@ Baseado no resultado oficial da Lotomania (Caixa Econômica Federal).
                 <Chip
                   size="small"
                   label="DISPONÍVEL"
-                  sx={{ bgcolor: "primary.main", color: "#0E0E0E", fontWeight: 700 }}
+                  sx={{
+                    bgcolor: "rgba(49,247,165,0.16)",
+                    border: "1px solid rgba(49,247,165,0.45)",
+                    color: "rgba(255,255,255,0.92)",
+                    fontWeight: 900,
+                  }}
                 />
                 <Chip
                   size="small"
                   label="RESERVADO"
                   sx={{
-                    bgcolor: "rgba(255,193,7,0.18)",
-                    border: "1px solid",
-                    borderColor: "secondary.main",
-                    color: "secondary.main",
-                    fontWeight: 700,
+                    bgcolor: "rgba(255,214,102,0.14)",
+                    border: "1px solid rgba(255,214,102,0.45)",
+                    color: "rgba(255,255,255,0.90)",
+                    fontWeight: 900,
                   }}
                 />
                 <Chip
                   size="small"
                   label="INDISPONÍVEL"
                   sx={{
-                    bgcolor: "rgba(211,47,47,0.18)",
-                    border: "1px solid",
-                    borderColor: "error.main",
-                    color: "error.main",
-                    fontWeight: 700,
+                    bgcolor: "rgba(255,46,147,0.12)",
+                    border: "1px solid rgba(255,46,147,0.40)",
+                    color: "rgba(255,255,255,0.90)",
+                    fontWeight: 900,
                   }}
                 />
                 <Typography variant="body2" sx={{ ml: 0.5, opacity: 0.9 }}>
@@ -734,144 +964,204 @@ Baseado no resultado oficial da Lotomania (Caixa Econômica Federal).
                 )}
               </Stack>
 
-              <Stack direction="row" spacing={1.5}>
-                <Button
-                  variant="outlined"
-                  color="inherit"
-                  disabled={!selecionados.length}
-                  onClick={limparSelecao}
-                >
-                  LIMPAR SELEÇÃO
-                </Button>
-                <Button
-                  variant="contained"
-                  color="success"
-                  disabled={continuarDisabled}
-                  onClick={handleAbrirConfirmacao}
-                >
-                  CONTINUAR
-                </Button>
-              </Stack>
+              <Box id="produtos" />
             </Stack>
 
-            {/* Grid 10x10 */}
-            <Box
-              sx={{
-                width: { xs: "calc(100vw - 32px)", sm: "calc(100vw - 64px)", md: "100%" },
-                maxWidth: 640,
-                aspectRatio: "1 / 1",
-                mx: "auto",
-              }}
+            <Stack
+              direction={{ xs: "column", md: "row" }}
+              spacing={2}
+              alignItems="stretch"
             >
-              <Box
-                sx={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(10, minmax(0, 1fr))",
-                  gridTemplateRows: "repeat(10, minmax(0, 1fr))",
-                  gap: { xs: 1, md: 1.2 },
-                  height: "100%",
-                  width: "100%",
-                  boxSizing: "border-box",
-                }}
-              >
-                {Array.from({ length: 100 }).map((_, idx) => {
-                  const sold = isIndisponivel(idx);
-                  const initials = soldInitials[idx];
-                  return (
-                    <Box
-                      key={idx}
-                      onClick={() => handleClickNumero(idx)}
-                      sx={{
-                        ...getCellSx(idx),
-                        borderRadius: 1.2,
-                        userSelect: "none",
-                        cursor: sold ? "not-allowed" : "pointer",
-                        aspectRatio: "1 / 1",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        fontWeight: 800,
-                        fontVariantNumeric: "tabular-nums",
-                        position: "relative", // overlays
-                      }}
-                    >
-                      {/* Número central (esconde no mobile se vendido, para não duplicar) */}
-                      <Box
-                        component="span"
-                        sx={{
-                          display: { xs: sold ? "none" : "inline", md: "inline" },
-                        }}
-                      >
-                        {pad2(idx)}
-                      </Box>
-
-                      {/* >>> MOBILE (xs): NÚMERO EM CIMA + INICIAIS EMBAIXO, centralizados */}
-                      {sold && (
+              {/* Coluna esquerda: grade */}
+              <Box sx={{ flex: 1, minWidth: 0 }}>
+                {/* Grid 10x10 */}
+                <Box
+                  sx={{
+                    width: { xs: "calc(100vw - 32px)", sm: "calc(100vw - 64px)", md: "100%" },
+                    maxWidth: 720,
+                    aspectRatio: "1 / 1",
+                    mx: { xs: "auto", md: 0 },
+                  }}
+                >
+                  <Box
+                    sx={{
+                      display: "grid",
+                      gridTemplateColumns: "repeat(10, minmax(0, 1fr))",
+                      gridTemplateRows: "repeat(10, minmax(0, 1fr))",
+                      gap: { xs: 1, md: 1.2 },
+                      height: "100%",
+                      width: "100%",
+                      boxSizing: "border-box",
+                    }}
+                  >
+                    {Array.from({ length: 100 }).map((_, idx) => {
+                      const sold = isIndisponivel(idx);
+                      const initials = soldInitials[idx];
+                      return (
                         <Box
+                          key={idx}
+                          onClick={() => handleClickNumero(idx)}
                           sx={{
-                            display: { xs: "flex", md: "none" },
-                            position: "absolute",
-                            inset: 0,
+                            ...getCellSx(idx),
+                            borderRadius: 2.2,
+                            userSelect: "none",
+                            cursor: sold ? "not-allowed" : "pointer",
+                            aspectRatio: "1 / 1",
+                            display: "flex",
                             alignItems: "center",
                             justifyContent: "center",
-                            flexDirection: "column",
-                            gap: 0.25,
-                            pointerEvents: "none",
+                            fontWeight: 950,
+                            fontVariantNumeric: "tabular-nums",
+                            position: "relative",
+                            border: sold
+                              ? "1px solid rgba(255,46,147,0.42)"
+                              : isSelecionado(idx) || isReservado(idx)
+                                ? "1px solid rgba(255,214,102,0.50)"
+                                : "1px solid rgba(255,46,147,0.40)",
+                            bgcolor: sold
+                              ? "rgba(255,46,147,0.10)"
+                              : isSelecionado(idx) || isReservado(idx)
+                                ? "rgba(255,214,102,0.10)"
+                                : "rgba(11,11,22,0.70)",
+                            color: sold ? "rgba(255,255,255,0.78)" : "rgba(255,255,255,0.92)",
+                            boxShadow: sold
+                              ? "0 0 12px rgba(255,46,147,0.10)"
+                              : "0 0 14px rgba(255,46,147,0.10)",
+                            "&:hover": sold ? undefined : { filter: "brightness(1.06)" },
                           }}
                         >
-                          <Box sx={{ fontWeight: 900, lineHeight: 1 }}>
-                            {pad2(idx)}
-                          </Box>
-                          {initials && (
-                            <Box
-                              sx={{
-                                mt: 0.25,
-                                px: 0.5,
-                                py: 0.1,
-                                borderRadius: 0.75,
-                                fontSize: 10,
-                                fontWeight: 900,
-                                lineHeight: 1,
-                                backgroundColor: "rgba(0,0,0,0.45)",
-                                color: "#fff",
-                                letterSpacing: 0.5,
-                              }}
-                            >
-                              {initials}
+                          <Stack spacing={0.2} alignItems="center" sx={{ pointerEvents: "none" }}>
+                            <Box component="span" sx={{ fontSize: { xs: 14, md: 18 }, lineHeight: 1 }}>
+                              {pad2(idx)}
                             </Box>
-                          )}
+                            {sold && initials && (
+                              <Box
+                                component="span"
+                                sx={{
+                                  mt: 0.25,
+                                  px: 0.8,
+                                  py: 0.15,
+                                  borderRadius: 999,
+                                  fontSize: 10,
+                                  fontWeight: 900,
+                                  letterSpacing: 0.6,
+                                  bgcolor: "rgba(0,0,0,0.45)",
+                                  border: "1px solid rgba(255,255,255,0.10)",
+                                }}
+                              >
+                                {initials}
+                              </Box>
+                            )}
+                          </Stack>
                         </Box>
-                      )}
-
-                      {/* >>> DESKTOP (md+): iniciais no canto inferior direito quando vendido */}
-                      {sold && initials && (
-                        <Box
-                          sx={{
-                            display: { xs: "none", md: "block" },
-                            position: "absolute",
-                            right: 4,
-                            bottom: 4,
-                            px: 0.5,
-                            py: 0.1,
-                            borderRadius: 0.75,
-                            fontSize: 10,
-                            fontWeight: 900,
-                            lineHeight: 1,
-                            backgroundColor: "rgba(0,0,0,0.45)",
-                            color: "#fff",
-                            letterSpacing: 0.5,
-                            pointerEvents: "none",
-                            zIndex: 2,
-                          }}
-                        >
-                          {initials}
-                        </Box>
-                      )}
-                    </Box>
-                  );
-                })}
+                      );
+                    })}
+                  </Box>
+                </Box>
               </Box>
-            </Box>
+
+              {/* Coluna direita: painel */}
+              <Stack
+                spacing={1.5}
+                sx={{
+                  width: { xs: "100%", md: 360 },
+                  flexShrink: 0,
+                }}
+              >
+                <Stack direction="row" spacing={1.2}>
+                  <Button
+                    fullWidth
+                    variant="outlined"
+                    disabled={!selecionados.length}
+                    onClick={limparSelecao}
+                    sx={{
+                      borderRadius: 999,
+                      fontWeight: 900,
+                      borderColor: "rgba(255,255,255,0.14)",
+                      color: "rgba(255,255,255,0.85)",
+                      "&:hover": { borderColor: "rgba(255,255,255,0.22)", bgcolor: "rgba(255,255,255,0.04)" },
+                    }}
+                  >
+                    Limpar seleção
+                  </Button>
+                  <Button
+                    fullWidth
+                    variant="contained"
+                    disabled={continuarDisabled}
+                    onClick={handleAbrirConfirmacao}
+                    sx={{
+                      borderRadius: 999,
+                      fontWeight: 1000,
+                      color: "#0B0B16",
+                      background:
+                        "linear-gradient(90deg, rgba(255,46,147,1) 0%, rgba(45,226,230,1) 100%)",
+                      boxShadow:
+                        "0 0 0 1px rgba(255,46,147,0.18), 0 0 22px rgba(255,46,147,0.12), 0 0 22px rgba(45,226,230,0.10)",
+                    }}
+                  >
+                    Continuar
+                  </Button>
+                </Stack>
+
+                <Paper
+                  variant="outlined"
+                  sx={{
+                    p: 2,
+                    borderRadius: 3,
+                    borderColor: "rgba(255,255,255,0.10)",
+                    bgcolor: "rgba(11,11,22,0.52)",
+                    backdropFilter: "blur(10px)",
+                  }}
+                >
+                  <Typography sx={{ fontWeight: 900, mb: 0.5 }}>
+                    Cartão Presente Digital
+                  </Typography>
+                  <Typography variant="body2" sx={{ opacity: 0.8 }}>
+                    Cada número selecionado gera um Cartão Presente Digital no valor da sua participação.
+                  </Typography>
+                </Paper>
+
+                <Paper
+                  variant="outlined"
+                  sx={{
+                    p: 2,
+                    borderRadius: 3,
+                    borderColor: "rgba(255,46,147,0.22)",
+                    background:
+                      "linear-gradient(180deg, rgba(255,46,147,0.10) 0%, rgba(166,66,255,0.08) 50%, rgba(45,226,230,0.08) 100%)",
+                    backdropFilter: "blur(10px)",
+                  }}
+                >
+                  <Typography sx={{ fontWeight: 1000, letterSpacing: 0.8 }}>
+                    1 GANHADOR
+                  </Typography>
+                  <Typography sx={{ fontWeight: 1000, fontSize: 22 }}>
+                    R$ 5.000 EM CRÉDITOS
+                  </Typography>
+                  <Typography variant="body2" sx={{ opacity: 0.78 }}>
+                    Resultado via Loteria Federal
+                  </Typography>
+                </Paper>
+
+                <Paper
+                  variant="outlined"
+                  sx={{
+                    p: 1.8,
+                    borderRadius: 3,
+                    borderColor: "rgba(255,255,255,0.10)",
+                    bgcolor: "rgba(11,11,22,0.42)",
+                    backdropFilter: "blur(10px)",
+                  }}
+                >
+                  <Stack direction="row" spacing={1} alignItems="center">
+                    <LockRoundedIcon sx={{ color: "primary.main" }} />
+                    <Typography variant="body2" sx={{ opacity: 0.85 }}>
+                      Seus dados e participação estão 100% seguros e criptografados.
+                    </Typography>
+                  </Stack>
+                </Paper>
+              </Stack>
+            </Stack>
 
             {/* >>>>> LINHA INFERIOR (apenas texto adicionado) */}
             <Box sx={{ mt: 2.5, textAlign: "center" }}>
@@ -882,7 +1172,7 @@ Baseado no resultado oficial da Lotomania (Caixa Econômica Federal).
                 return (
                   <Typography variant="subtitle1" sx={{ opacity: 0.95, fontWeight: 800 }}>
                     📅 Utilizaremos o sorteio do dia <strong>{dia}</strong> ou o
-                    primeiro sorteio da <strong>Lotomania</strong> após a tabela fechada. 🎯
+                    primeiro sorteio da <strong>Loteria Federal</strong> após a tabela fechada.
                   </Typography>
                 );
               })()}
@@ -935,7 +1225,7 @@ Baseado no resultado oficial da Lotomania (Caixa Econômica Federal).
     </Typography>
 
     <Typography variant="body1">
-      • Uso exclusivo no site da New Store Relógios
+              • Uso exclusivo no site da xNaMai Sorteios
     </Typography>
 
     <Typography variant="body1">
@@ -997,7 +1287,7 @@ Baseado no resultado oficial da Lotomania (Caixa Econômica Federal).
                 Regras para utilização dos <Box component="span" sx={{ opacity: 0.85 }}>cartões presente</Box>
               </Typography>
               <Stack component="ul" sx={{ pl: 3, m: 0 }} spacing={1}>
-                <Typography component="li">Uso exclusivo no site da <strong>New Store Relógios.</strong></Typography>
+                <Typography component="li">Uso exclusivo no site da <strong>xNaMai Sorteios.</strong></Typography>
                 <Typography component="li">
                   Não é possível comprar outro cartão-presente com crédito de sorteio.
                 </Typography>
@@ -1015,7 +1305,7 @@ Baseado no resultado oficial da Lotomania (Caixa Econômica Federal).
                 
                 <Typography component="li">Validade: <strong>6 meses</strong>, renovável automaticamente a cada participação..</Typography>
                 <Typography component="li">
-                  A New Store não se responsabiliza por perda, extravio ou validade expirada.
+                  A xNaMai não se responsabiliza por perda, extravio ou validade expirada.
                 </Typography>
                 <Typography component="li">
                   O cartão não é cumulativo com outros cupons de desconto.
@@ -1143,7 +1433,7 @@ Baseado no resultado oficial da Lotomania (Caixa Econômica Federal).
       </AccordionSummary>
       <AccordionDetails>
         <Typography variant="body2">
-          Somente no site da New Store Relógios, em qualquer produto disponível no site (respeitando a tabela).
+          Somente no site da xNaMai Sorteios, em qualquer produto disponível no site (respeitando a tabela).
         </Typography>
       </AccordionDetails>
     </Accordion>
@@ -1174,7 +1464,7 @@ Baseado no resultado oficial da Lotomania (Caixa Econômica Federal).
       </AccordionSummary>
       <AccordionDetails>
         <Typography variant="body2">
-          No grupo oficial da New Store Relógios no WhatsApp.
+          No grupo oficial da xNaMai Sorteios no WhatsApp.
         </Typography>
       </AccordionDetails>
     </Accordion>
@@ -1256,6 +1546,8 @@ Baseado no resultado oficial da Lotomania (Caixa Econômica Federal).
           </Paper>
         </Stack>
       </Container>
+        </Box>
+      </Box>
 
       {/* Modal de confirmação */}
       <Dialog open={open} onClose={handleFechar} maxWidth="xs" fullWidth PaperProps={{ sx: { borderRadius: 3 } }}>

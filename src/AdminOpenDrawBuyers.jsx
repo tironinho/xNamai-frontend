@@ -161,7 +161,6 @@ export default function AdminOpenDrawBuyers() {
   const [buyers, setBuyers] = React.useState([]);      // [{user_id, name, email, numbers[], count, total_cents}]
   const [numbers, setNumbers] = React.useState([]);    // [{n, user_id, name, email}]
   const [query, setQuery] = React.useState("");
-  const [exportError, setExportError] = React.useState("");
 
   const load = React.useCallback(async () => {
     setLoading(true);
@@ -345,16 +344,14 @@ export default function AdminOpenDrawBuyers() {
   /** ---------- EXPORT 2: PNG 1080x1920 (Lista de nomes e números) [PAGINADO] ---------- */
   const exportPNGListMobile = async () => {
     try {
-      setExportError("");
-
       if (!drawId) {
-        setExportError("Não foi possível exportar: sorteio inválido.");
+        alert("Não foi possível exportar: sorteio inválido.");
         return;
       }
 
       const list = Array.isArray(buyers) ? buyers : [];
       if (list.length === 0) {
-        setExportError("Não há compradores para exportar.");
+        alert("Não há compradores para exportar.");
         return;
       }
 
@@ -444,11 +441,11 @@ export default function AdminOpenDrawBuyers() {
         ctx.textBaseline = "middle";
         ctx.fillText("N", P + 16, TOP_Y + 28);
 
-        // NEW STORE
+        // xNaMai Sorteios
         ctx.fillStyle = "#ffffff";
         ctx.font = "800 42px Inter, system-ui, Arial";
         ctx.textBaseline = "alphabetic";
-        ctx.fillText("NEW STORE", P + 78, TOP_Y + 42);
+        ctx.fillText("xNaMai Sorteios", P + 78, TOP_Y + 42);
 
         // Título
         ctx.font = "900 64px Inter, system-ui, Arial";
@@ -677,7 +674,7 @@ export default function AdminOpenDrawBuyers() {
       downloadBlob(zipBlob, `${base}.zip`);
     } catch (e) {
       console.error(e);
-      setExportError(e?.message || "Falha ao exportar PNG (lista).");
+      alert(e?.message || "Falha ao exportar PNG (lista).");
     }
   };
 
@@ -693,7 +690,7 @@ export default function AdminOpenDrawBuyers() {
 
           <Box component={RouterLink} to="/admin"
             sx={{ position: "absolute", left: "50%", top: "50%", transform: "translate(-50%, -50%)" }}>
-            <Box component="img" src={logoNewStore} alt="NEW STORE" sx={{ height: 40 }} />
+            <Box component="img" src={logoNewStore} alt="xNaMai Sorteios" sx={{ height: 40 }} />
           </Box>
 
           <IconButton color="inherit" sx={{ ml: "auto" }}>

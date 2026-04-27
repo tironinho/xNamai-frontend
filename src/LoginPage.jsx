@@ -74,7 +74,7 @@ export default function LoginPage() {
           email: e,
           newPassword,
           from: "administracao@newstoresorteios.com.br",
-          subject: "Reset de senha - New Store Sorteios",
+          subject: "Reset de senha - xNaMai Sorteios",
           message: `Sua senha foi resetada.\n\nNova Senha: ${newPassword}\n\nSe você não solicitou, ignore este e-mail.`
         }),
       });
@@ -130,7 +130,7 @@ export default function LoginPage() {
           </IconButton>
           <Box component={RouterLink} to="/"
                sx={{ position: "absolute", left: "50%", top: "50%", transform: "translate(-50%, -50%)", display: "flex", alignItems: "center" }}>
-            <Box component="img" src={logoNewStore} alt="NEW STORE" sx={{ height: 40, objectFit: "contain" }} />
+            <Box component="img" src={logoNewStore} alt="xNaMai Sorteios" sx={{ height: 40, objectFit: "contain" }} />
           </Box>
         </Toolbar>
       </AppBar>

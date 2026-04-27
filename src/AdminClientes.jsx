@@ -246,7 +246,7 @@ export default function AdminClientes() {
           </IconButton>
           <Box component={RouterLink} to="/admin"
                sx={{ position: "absolute", left: "50%", top: "50%", transform: "translate(-50%, -50%)" }}>
-            <Box component="img" src={logoNewStore} alt="NEW STORE" sx={{ height: 40 }} />
+            <Box component="img" src={logoNewStore} alt="xNaMai Sorteios" sx={{ height: 40 }} />
           </Box>
           <IconButton color="inherit" sx={{ ml: "auto" }} onClick={openMenu}>
             <AccountCircleRoundedIcon />
