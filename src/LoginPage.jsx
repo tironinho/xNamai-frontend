@@ -9,7 +9,7 @@ import {
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import ArrowBackIosNewRoundedIcon from "@mui/icons-material/ArrowBackIosNewRounded";
-import logoNewStore from "./Logo-branca-sem-fundo-768x132.png";
+import xNamaiLogo from "./assets/branding/xnamai-logo.svg";
 import { useAuth } from "./authContext";
 import { apiJoin } from "./lib/api";
 
@@ -130,7 +130,7 @@ export default function LoginPage() {
           </IconButton>
           <Box component={RouterLink} to="/"
                sx={{ position: "absolute", left: "50%", top: "50%", transform: "translate(-50%, -50%)", display: "flex", alignItems: "center" }}>
-            <Box component="img" src={logoNewStore} alt="xNaMai Sorteios" sx={{ height: 40, objectFit: "contain" }} />
+            <Box component="img" src={xNamaiLogo} alt="xNaMai Sorteios" sx={{ height: 40, objectFit: "contain" }} />
           </Box>
         </Toolbar>
       </AppBar>

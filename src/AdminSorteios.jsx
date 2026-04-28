@@ -10,7 +10,7 @@ import ArrowBackIosNewRoundedIcon from "@mui/icons-material/ArrowBackIosNewRound
 import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
 import ExpandMoreRoundedIcon from "@mui/icons-material/ExpandMoreRounded";
 import ExpandLessRoundedIcon from "@mui/icons-material/ExpandLessRounded";
-import logoNewStore from "./Logo-branca-sem-fundo-768x132.png";
+import xNamaiLogo from "./assets/branding/xnamai-logo.svg";
 import { useAuth } from "./authContext";
 import { API_CONFIG } from "./config/api";
 
@@ -231,7 +231,7 @@ export default function AdminSorteios() {
             to="/admin"
             sx={{ position: "absolute", left: "50%", top: "50%", transform: "translate(-50%, -50%)" }}
           >
-            <Box component="img" src={logoNewStore} alt="xNaMai Sorteios" sx={{ height: 40 }} />
+            <Box component="img" src={xNamaiLogo} alt="xNaMai Sorteios" sx={{ height: 40 }} />
           </Box>
           <IconButton color="inherit" sx={{ ml: "auto" }} onClick={openMenu}>
             <AccountCircleRoundedIcon />

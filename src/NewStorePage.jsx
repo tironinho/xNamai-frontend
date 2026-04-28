@@ -19,7 +19,8 @@ import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 import GiftCardSimulator from "./components/GiftCardSimulator.jsx";
-import NeonLinesBackground from "./components/NeonLinesBackground";
+import AnimatedNeonLines from "./components/AnimatedNeonLines";
+import xNamaiLogo from "./assets/branding/xnamai-logo.svg";
 
 import {
   AppBar,
@@ -49,11 +50,11 @@ import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
 import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
 import LockRoundedIcon from "@mui/icons-material/LockRounded";
 
-// Imagens locais
-import imgCardExemplo from "./cartaoilustrativoTexto-do-seu-paragrafo-6-1024x1024.png";
-import imgTabelaUtilizacao from "./Tabela-para-utilizacao-do-3-1024x1024.png";
-import imgAcumulo1 from "./1-2-1-1024x512.png";
-import imgAcumulo2 from "./2-1-1-1024x512.png";
+// Imagens institucionais (neutras, marca xNaMai)
+import imgCardExemplo from "./assets/images/giftcard-illustration.svg";
+import imgTabelaUtilizacao from "./assets/images/usage-table-illustration.svg";
+import imgAcumulo1 from "./assets/images/accumulo-1.svg";
+import imgAcumulo2 from "./assets/images/accumulo-2.svg";
 
 // Tema
 const theme = createTheme({
@@ -79,9 +80,7 @@ const MOCK_RESERVADOS = [];
 const MOCK_INDISPONIVEIS = [];
 
 // Base do backend
-const API_BASE = String(
-  API_CONFIG.baseUrl || "https://newstore-backend.onrender.com"
-).replace(/\/+$/, "");
+const API_BASE = String(API_CONFIG.baseUrl || "/api").replace(/\/+$/, "");
 
 // ===== Helpers de auth + reserva =====
 function sanitizeToken(t) {
@@ -583,17 +582,10 @@ export default function NewStorePage({
     <ThemeProvider theme={theme}>
       <CssBaseline />
 
-      <Box
-        sx={{
-          minHeight: "100vh",
-          position: "relative",
-          isolation: "isolate",
-        }}
-      >
-        <NeonLinesBackground />
+      <div className="xnamai-page">
+        <AnimatedNeonLines />
 
-        {/* content layer */}
-        <Box sx={{ position: "relative", zIndex: 1 }}>
+        <div className="xnamai-page-content">
       {/* Topo */}
       <AppBar
         position="sticky"
@@ -629,7 +621,15 @@ export default function NewStorePage({
               "&:hover": { bgcolor: "transparent" },
             }}
           >
-            xNaMai Sorteios
+            <Stack direction="row" spacing={1.2} alignItems="center">
+              <Box
+                component="img"
+                src={xNamaiLogo}
+                alt="xNaMai Sorteios"
+                sx={{ height: 28, width: "auto" }}
+              />
+              <span>xNaMai Sorteios</span>
+            </Stack>
           </Button>
 
           <Stack
@@ -710,9 +710,17 @@ export default function NewStorePage({
         }}
       >
         <Stack spacing={1} sx={{ p: 2 }}>
-          <Typography sx={{ fontWeight: 900, letterSpacing: 0.6 }}>
-            xNaMai Sorteios
-          </Typography>
+          <Stack direction="row" spacing={1.2} alignItems="center">
+            <Box
+              component="img"
+              src={xNamaiLogo}
+              alt="xNaMai Sorteios"
+              sx={{ height: 28, width: "auto" }}
+            />
+            <Typography sx={{ fontWeight: 900, letterSpacing: 0.6 }}>
+              xNaMai Sorteios
+            </Typography>
+          </Stack>
           <Divider sx={{ borderColor: "rgba(255,255,255,0.10)" }} />
           {navItems.map((it) => (
             <Button
@@ -1546,8 +1554,8 @@ export default function NewStorePage({
           </Paper>
         </Stack>
       </Container>
-        </Box>
-      </Box>
+        </div>
+      </div>
 
       {/* Modal de confirmação */}
       <Dialog open={open} onClose={handleFechar} maxWidth="xs" fullWidth PaperProps={{ sx: { borderRadius: 3 } }}>

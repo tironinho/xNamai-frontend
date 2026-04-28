@@ -1,7 +1,7 @@
 // src/AccountPage.jsx
 import * as React from "react";
 import { useNavigate, Link as RouterLink } from "react-router-dom";
-import logoNewStore from "./Logo-branca-sem-fundo-768x132 - Copia.png";
+import xNamaiLogo from "./assets/branding/xnamai-logo.svg";
 import { SelectionContext } from "./selectionContext";
 import { useAuth } from "./authContext";
 import {
@@ -741,7 +741,7 @@ export default function AccountPage() {
                 alignItems: "center",
               }}
             >
-              <Box component="img" src={logoNewStore} alt="xNaMai Sorteios" sx={{ height: { xs: 42, sm: 58, md: 62 }, objectFit: "contain" }} />
+              <Box component="img" src={xNamaiLogo} alt="xNaMai Sorteios" sx={{ height: { xs: 42, sm: 58, md: 62 }, objectFit: "contain" }} />
             </Box>
           <IconButton color="inherit" sx={{ ml: "auto" }} onClick={(e) => setMenuEl(e.currentTarget)}>
             <AccountCircleRoundedIcon />
@@ -884,8 +884,8 @@ export default function AccountPage() {
               >
                 <Box
                   component="img"
-                  src={logoNewStore}
-                  alt="NS"
+                  src={xNamaiLogo}
+                  alt="xNaMai Sorteios"
                   sx={{
                     height: { xs: 46, sm: 70, md: 76 },
                     objectFit: "contain",

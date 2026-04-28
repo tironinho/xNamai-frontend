@@ -10,7 +10,7 @@ import ArrowBackIosNewRoundedIcon from "@mui/icons-material/ArrowBackIosNewRound
 import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
 import DownloadRoundedIcon from "@mui/icons-material/DownloadRounded";
 import JSZip from "jszip";
-import logoNewStore from "./Logo-branca-sem-fundo-768x132.png";
+import xNamaiLogo from "./assets/branding/xnamai-logo.svg";
 import { useAuth } from "./authContext";
 import { API_CONFIG } from "./config/api";
 
@@ -242,7 +242,7 @@ export default function AdminOpenDrawBuyers() {
 
     // Logo
     try {
-      const dataURL = await preloadAsDataURL(logoNewStore);
+      const dataURL = await preloadAsDataURL(xNamaiLogo);
       const img = new Image();
       await new Promise((res, rej) => { img.onload = res; img.onerror = rej; img.src = dataURL; });
       const h = 72;
@@ -331,7 +331,7 @@ export default function AdminOpenDrawBuyers() {
     ctx.textAlign = "left";
     ctx.fillText(`Gerado pela administração • ${new Date().toLocaleString("pt-BR")}`, Mx, footY);
     ctx.textAlign = "right";
-    ctx.fillText("newstore", W - Mx, footY);
+    ctx.fillText("xnamai", W - Mx, footY);
     ctx.globalAlpha = 1;
 
     const dataUrl = canvas.toDataURL("image/png");
@@ -475,7 +475,7 @@ export default function AdminOpenDrawBuyers() {
 
         ctx.font = "700 24px Inter, system-ui, Arial";
         ctx.fillStyle = "rgba(255,255,255,.85)";
-        ctx.fillText("newstore", W - P - ctx.measureText("newstore").width, footerY);
+        ctx.fillText("xnamai", W - P - ctx.measureText("xnamai").width, footerY);
       };
 
       const drawCard = (ctx, item) => {
@@ -690,7 +690,7 @@ export default function AdminOpenDrawBuyers() {
 
           <Box component={RouterLink} to="/admin"
             sx={{ position: "absolute", left: "50%", top: "50%", transform: "translate(-50%, -50%)" }}>
-            <Box component="img" src={logoNewStore} alt="xNaMai Sorteios" sx={{ height: 40 }} />
+            <Box component="img" src={xNamaiLogo} alt="xNaMai Sorteios" sx={{ height: 40 }} />
           </Box>
 
           <IconButton color="inherit" sx={{ ml: "auto" }}>

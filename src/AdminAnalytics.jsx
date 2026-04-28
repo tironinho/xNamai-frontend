@@ -23,20 +23,9 @@ const theme = createTheme({
 
 /* ============================ HELPERS API ============================ */
 /**
- * Padrão: backend remoto na Render.
- * Para trocar, salve no localStorage:
- *   REACT_APP_API_BASE_URL  ou  REACT_APP_API_BASE
- * Para forçar proxy local (/api), salve:
- *   REACT_APP_API_FORCE_RELATIVE = "1"
+ * Padrão: usa REACT_APP_API_BASE (ou /api).
  */
-const REMOTE_DEFAULT = "https://newstore-backend.onrender.com";
-const FORCE_RELATIVE = localStorage.getItem("REACT_APP_API_FORCE_RELATIVE") === "1";
-
-const RAW_BASE =
-  (localStorage.getItem("REACT_APP_API_BASE_URL") ||
-    localStorage.getItem("REACT_APP_API_BASE") ||
-    (FORCE_RELATIVE ? "/api" : REMOTE_DEFAULT)
-  );
+const RAW_BASE = process.env.REACT_APP_API_BASE || "/api";
 
 const API_BASE = String(RAW_BASE).replace(/\/+$/, "");
 

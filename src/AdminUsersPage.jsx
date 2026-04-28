@@ -354,7 +354,7 @@ export default function AdminUsersPage() {
       setToast({
         open: true,
         sev: "success",
-        msg: creating ? "Salvo com sucesso. Senha padrão: newstore" : "Salvo com sucesso."
+        msg: creating ? "Salvo com sucesso. Senha padrão definida." : "Salvo com sucesso."
       });
     } catch {
       setToast({ open: true, sev: "error", msg: "Não foi possível salvar." });

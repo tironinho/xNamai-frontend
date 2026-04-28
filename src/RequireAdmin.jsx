@@ -3,11 +3,12 @@ import * as React from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import { Box, CircularProgress } from "@mui/material";
 import { useAuth } from "./authContext";
+import { API_CONFIG } from "./config/api";
 
 const ADMIN_EMAIL = "admin@newstore.com.br";
 
-// Garante /api no fim mesmo se REACT_APP_API_BASE_URL vier sem /api
-const RAW_API = process.env.REACT_APP_API_BASE_URL || "/api";
+// Garante /api no fim mesmo se REACT_APP_API_BASE vier sem /api
+const RAW_API = API_CONFIG.baseUrl || "/api";
 const API_BASE = (
   RAW_API.endsWith("/api") ? RAW_API : `${RAW_API.replace(/\/+$/, "")}/api`
 ).replace(/\/+$/, "");

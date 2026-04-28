@@ -4,10 +4,7 @@
 import { API_CONFIG } from "../config/api";
 
 const API_BASE =
-  String(API_CONFIG.baseUrl || "https://newstore-backend.onrender.com").replace(
-    /\/+$/,
-    ""
-  );
+  String(API_CONFIG.baseUrl || "/api").replace(/\/+$/, "");
 
 const USE_BACKEND =
   String(process.env.REACT_APP_USE_BACKEND || (process.env.REACT_APP_AUTH_PROVIDER === 'backend'))

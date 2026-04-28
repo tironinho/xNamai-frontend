@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="520" height="140" viewBox="0 0 520 140" fill="none">
+  <defs>
+    <linearGradient id="g" x1="20" y1="20" x2="500" y2="120" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FF2E93"/>
+      <stop offset="0.5" stop-color="#A642FF"/>
+      <stop offset="1" stop-color="#2DE2E6"/>
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-60%" width="140%" height="220%" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="6" result="b"/>
+      <feColorMatrix in="b" type="matrix"
+        values="1 0 0 0 0
+                0 1 0 0 0
+                0 0 1 0 0
+                0 0 0 0.35 0" result="c"/>
+      <feMerge>
+        <feMergeNode in="c"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- mark -->
+  <g filter="url(#glow)">
+    <path d="M44 98c18-40 42-60 72-60 19 0 36 8 51 24 15-16 32-24 51-24 30 0 54 20 72 60"
+          stroke="url(#g)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="116" cy="44" r="6" fill="#FF2E93"/>
+    <circle cx="167" cy="44" r="6" fill="#A642FF"/>
+    <circle cx="218" cy="44" r="6" fill="#2DE2E6"/>
+  </g>
+
+  <!-- wordmark -->
+  <g filter="url(#glow)">
+    <text x="270" y="74" font-family="Inter, system-ui, Segoe UI, Roboto, Arial" font-size="46" font-weight="900" letter-spacing="1">
+      <tspan fill="url(#g)">xNaMai</tspan>
+    </text>
+    <text x="270" y="110" font-family="Inter, system-ui, Segoe UI, Roboto, Arial" font-size="26" font-weight="800" letter-spacing="3" fill="rgba(255,255,255,0.85)">
+      SORTEIOS
+    </text>
+  </g>
+</svg>
+

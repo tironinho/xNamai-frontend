@@ -1,5 +1,7 @@
 // src/services/user.js
-const API = (process.env.REACT_APP_API_BASE_URL || "").replace(/\/$/, "");
+import { API_CONFIG } from "../config/api";
+
+const API = String(API_CONFIG.baseUrl || "").replace(/\/$/, "");
 
 function getToken() {
   return (

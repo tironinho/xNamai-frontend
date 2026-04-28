@@ -5,9 +5,23 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background: #050014;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+.xnamai-page {
+  position: relative;
+  min-height: 100vh;
+  overflow-x: hidden;
+  color: #fff;
+  background: #050014;
+}
+
+.xnamai-page-content {
+  position: relative;
+  z-index: 2;
 }
