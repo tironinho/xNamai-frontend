@@ -10,9 +10,9 @@ import ArrowBackIosNewRoundedIcon from "@mui/icons-material/ArrowBackIosNewRound
 import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
 import ExpandMoreRoundedIcon from "@mui/icons-material/ExpandMoreRounded";
 import ExpandLessRoundedIcon from "@mui/icons-material/ExpandLessRounded";
-import xNamaiLogo from "./assets/branding/xnamai-logo.svg";
 import { useAuth } from "./authContext";
 import { API_CONFIG } from "./config/api";
+import BrandLogo from "./components/branding/BrandLogo";
 
 const theme = createTheme({
   palette: { mode: "dark", background: { default: "#0E0E0E", paper: "#121212" } },
@@ -231,7 +231,7 @@ export default function AdminSorteios() {
             to="/admin"
             sx={{ position: "absolute", left: "50%", top: "50%", transform: "translate(-50%, -50%)" }}
           >
-            <Box component="img" src={xNamaiLogo} alt="xNaMai Sorteios" sx={{ height: 40 }} />
+            <BrandLogo size={34} />
           </Box>
           <IconButton color="inherit" sx={{ ml: "auto" }} onClick={openMenu}>
             <AccountCircleRoundedIcon />

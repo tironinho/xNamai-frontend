@@ -22,7 +22,7 @@ import VerifiedUserRoundedIcon from "@mui/icons-material/VerifiedUserRounded";
 import ReplayRoundedIcon from "@mui/icons-material/ReplayRounded";
 
 import GiftCardSimulator from "./components/GiftCardSimulator.jsx";
-import xNamaiLogo from "./assets/branding/xnamai-logo.svg";
+import BrandLogo from "./components/branding/BrandLogo";
 
 import {
   AppBar,
@@ -641,13 +641,8 @@ export default function NewStorePage({
             }}
           >
             <Stack direction="row" spacing={1.2} alignItems="center">
-              <Box
-                component="img"
-                src={xNamaiLogo}
-                alt="xNaMai Sorteios"
-                sx={{ height: 28, width: "auto" }}
-              />
-              <span>xNaMai Sorteios</span>
+              <BrandLogo size={26} />
+              <span>Sorteios</span>
             </Stack>
           </Button>
 
@@ -778,14 +773,9 @@ export default function NewStorePage({
       >
         <Stack spacing={1} sx={{ p: 2 }}>
           <Stack direction="row" spacing={1.2} alignItems="center">
-            <Box
-              component="img"
-              src={xNamaiLogo}
-              alt="xNaMai Sorteios"
-              sx={{ height: 28, width: "auto" }}
-            />
+            <BrandLogo size={26} />
             <Typography sx={{ fontWeight: 900, letterSpacing: 0.6 }}>
-              xNaMai Sorteios
+              Sorteios
             </Typography>
           </Stack>
           <Divider sx={{ borderColor: "rgba(255,255,255,0.10)" }} />

@@ -9,10 +9,10 @@ import {
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import ArrowBackIosNewRoundedIcon from "@mui/icons-material/ArrowBackIosNewRounded";
-import xNamaiLogo from "./assets/branding/xnamai-logo.svg";
 import { useAuth } from "./authContext";
 import { apiJoin } from "./lib/api";
 import "./styles/xnamai-login.css";
+import BrandLogo from "./components/branding/BrandLogo";
 
 /** ===== DEBUG ===== */
 const DBG =
@@ -161,12 +161,7 @@ export default function LoginPage() {
                 }}
                 aria-label="Voltar para a página inicial"
               >
-                <Box
-                  component="img"
-                  src={xNamaiLogo}
-                  alt="xNaMai Sorteios"
-                  sx={{ height: 36, objectFit: "contain" }}
-                />
+                <BrandLogo size={32} />
               </Box>
             </Toolbar>
           </AppBar>
@@ -192,7 +187,7 @@ export default function LoginPage() {
             >
               <Stack spacing={2} component="form" onSubmit={handleSubmit}>
                 <Stack direction="row" spacing={1.4} alignItems="center">
-                  <Box component="img" src={xNamaiLogo} alt="xNaMai" sx={{ height: 32, width: "auto" }} />
+                  <BrandLogo size={28} />
                   <Box>
                     <Typography variant="h5" fontWeight={950} sx={{ letterSpacing: -0.3 }}>
                       Entrar na sua conta

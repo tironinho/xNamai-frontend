@@ -22,9 +22,9 @@ import {
 } from "@mui/material";
 import ArrowBackIosNewRoundedIcon from "@mui/icons-material/ArrowBackIosNewRounded";
 import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
-import xNamaiLogo from "./assets/branding/xnamai-logo.svg";
 import { useAuth } from "./authContext";
 import { API_CONFIG } from "./config/api";
+import BrandLogo from "./components/branding/BrandLogo";
 
 const theme = createTheme({
   palette: {
@@ -273,7 +273,7 @@ export default function AdminDashboard() {
 
           <Box component={RouterLink} to="/admin"
                sx={{ position: "absolute", left: "50%", top: "50%", transform: "translate(-50%, -50%)" }}>
-            <Box component="img" src={xNamaiLogo} alt="xNaMai Sorteios" sx={{ height: 40 }} />
+            <BrandLogo size={34} />
           </Box>
 
           <IconButton color="inherit" sx={{ ml: "auto" }} onClick={openMenu}>

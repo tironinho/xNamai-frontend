@@ -1,9 +1,9 @@
 // src/AccountPage.jsx
 import * as React from "react";
 import { useNavigate, Link as RouterLink } from "react-router-dom";
-import xNamaiLogo from "./assets/branding/xnamai-logo.svg";
 import { SelectionContext } from "./selectionContext";
 import { useAuth } from "./authContext";
+import BrandLogo from "./components/branding/BrandLogo";
 import {
   AppBar, Box, Button, Chip, Container, CssBaseline, IconButton, Menu, MenuItem,
   Divider, Paper, Stack, ThemeProvider, Toolbar, Typography, createTheme,
@@ -741,7 +741,7 @@ export default function AccountPage() {
                 alignItems: "center",
               }}
             >
-              <Box component="img" src={xNamaiLogo} alt="xNaMai Sorteios" sx={{ height: { xs: 42, sm: 58, md: 62 }, objectFit: "contain" }} />
+              <BrandLogo size={52} />
             </Box>
           <IconButton color="inherit" sx={{ ml: "auto" }} onClick={(e) => setMenuEl(e.currentTarget)}>
             <AccountCircleRoundedIcon />
@@ -882,16 +882,7 @@ export default function AccountPage() {
                   gap: { xs: 1, md: 1.3 },
                 }}
               >
-                <Box
-                  component="img"
-                  src={xNamaiLogo}
-                  alt="xNaMai Sorteios"
-                  sx={{
-                    height: { xs: 46, sm: 70, md: 76 },
-                    objectFit: "contain",
-                    filter: "brightness(1.02)",
-                  }}
-                />
+                <BrandLogo size={60} variant="inverse" />
                 <Box component="svg" viewBox="0 0 60 30" sx={{ width: { xs: 38, md: 50 }, height: { xs: 20, md: 26 } }}>
                   <path d="M20 5 C28 10, 28 20, 20 25" fill="none" stroke="#7CFF6B" strokeWidth="3" strokeLinecap="round"/>
                   <path d="M34 3 C44 10, 44 20, 34 27" fill="none" stroke="#7CFF6B" strokeWidth="3" strokeLinecap="round" opacity={0.95}/>

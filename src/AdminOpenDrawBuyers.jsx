@@ -10,9 +10,10 @@ import ArrowBackIosNewRoundedIcon from "@mui/icons-material/ArrowBackIosNewRound
 import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
 import DownloadRoundedIcon from "@mui/icons-material/DownloadRounded";
 import JSZip from "jszip";
-import xNamaiLogo from "./assets/branding/xnamai-logo.svg";
+import xNamaiWordmark from "./assets/branding/xnamai-wordmark.svg";
 import { useAuth } from "./authContext";
 import { API_CONFIG } from "./config/api";
+import BrandLogo from "./components/branding/BrandLogo";
 
 /* ---------- tema ---------- */
 const theme = createTheme({
@@ -242,7 +243,7 @@ export default function AdminOpenDrawBuyers() {
 
     // Logo
     try {
-      const dataURL = await preloadAsDataURL(xNamaiLogo);
+      const dataURL = await preloadAsDataURL(xNamaiWordmark);
       const img = new Image();
       await new Promise((res, rej) => { img.onload = res; img.onerror = rej; img.src = dataURL; });
       const h = 72;
@@ -690,7 +691,7 @@ export default function AdminOpenDrawBuyers() {
 
           <Box component={RouterLink} to="/admin"
             sx={{ position: "absolute", left: "50%", top: "50%", transform: "translate(-50%, -50%)" }}>
-            <Box component="img" src={xNamaiLogo} alt="xNaMai Sorteios" sx={{ height: 40 }} />
+            <BrandLogo size={34} />
           </Box>
 
           <IconButton color="inherit" sx={{ ml: "auto" }}>
