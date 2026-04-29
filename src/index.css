@@ -5,7 +5,8 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: #050014;
+  background: #F4F8FF;
+  color: #0B1B33;
 }
 
 code {
@@ -17,8 +18,8 @@ code {
   position: relative;
   min-height: 100vh;
   overflow-x: hidden;
-  color: #fff;
-  background: #050014;
+  color: inherit;
+  background: transparent;
 }
 
 .xnamai-page-content {

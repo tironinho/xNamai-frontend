@@ -17,9 +17,11 @@ import PixIcon from "@mui/icons-material/Pix";
 import CreditCardOutlinedIcon from "@mui/icons-material/CreditCardOutlined";
 import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
+import VerifiedUserRoundedIcon from "@mui/icons-material/VerifiedUserRounded";
+import ReplayRoundedIcon from "@mui/icons-material/ReplayRounded";
 
 import GiftCardSimulator from "./components/GiftCardSimulator.jsx";
-import AnimatedNeonLines from "./components/AnimatedNeonLines";
 import xNamaiLogo from "./assets/branding/xnamai-logo.svg";
 
 import {
@@ -36,6 +38,7 @@ import {
   DialogTitle,
   Divider,
   IconButton,
+  InputBase,
   Link,
   Menu,
   MenuItem,
@@ -59,16 +62,27 @@ import imgAcumulo2 from "./assets/images/accumulo-2.svg";
 // Tema
 const theme = createTheme({
   palette: {
-    mode: "dark",
-    primary: { main: "#2DE2E6" },     // neon azul
-    secondary: { main: "#FF2E93" },   // neon rosa
-    error: { main: "#FF3B5C" },
-    background: { default: "#070712", paper: "#0B0B16" },
-    success: { main: "#31F7A5" },
+    mode: "light",
+    primary: { main: "#1E66FF" }, // azul premium
+    secondary: { main: "#0B5FFF" },
+    error: { main: "#D32F2F" },
+    warning: { main: "#F2B705" },
+    success: { main: "#2E7D32" },
+    background: { default: "#F4F8FF", paper: "#FFFFFF" },
+    text: { primary: "#0B1B33", secondary: "rgba(11,27,51,0.72)" },
   },
-  shape: { borderRadius: 12 },
+  shape: { borderRadius: 16 },
   typography: {
     fontFamily: ["Inter", "system-ui", "Segoe UI", "Roboto", "Arial"].join(","),
+  },
+  components: {
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          borderColor: "rgba(15, 23, 42, 0.10)",
+        },
+      },
+    },
   },
 });
 
@@ -547,29 +561,37 @@ export default function NewStorePage({
   };
 
   const getCellSx = (n) => {
-    if (isIndisponivel(n)) {
+    if (isIndisponivel(n))
       return {
-        border: "2px solid",
-        borderColor: "error.main",
-        bgcolor: "rgba(211,47,47,0.15)",
-        color: "grey.300",
+        border: "1px solid rgba(15, 23, 42, 0.14)",
+        bgcolor: "rgba(15, 23, 42, 0.06)",
+        color: "rgba(11,27,51,0.40)",
         cursor: "not-allowed",
-        opacity: 0.85,
+        opacity: 0.9,
       };
-    }
-    if (isSelecionado(n) || isReservado(n)) {
+
+    if (isSelecionado(n))
       return {
-        border: "2px solid",
-        borderColor: "secondary.main",
-        bgcolor: "rgba(255,193,7,0.12)",
+        border: "1px solid rgba(30, 102, 255, 0.65)",
+        bgcolor: "primary.main",
+        color: "#FFFFFF",
+        boxShadow: "0 10px 22px rgba(30, 102, 255, 0.22)",
       };
-    }
+
+    if (isReservado(n))
+      return {
+        border: "1px solid rgba(242, 183, 5, 0.55)",
+        bgcolor: "rgba(242, 183, 5, 0.16)",
+        color: "rgba(11,27,51,0.92)",
+      };
+
     return {
-      border: "2px solid rgba(255,255,255,0.08)",
-      bgcolor: "primary.main",
-      color: "#0E0E0E",
-      "&:hover": { filter: "brightness(0.95)" },
-      transition: "filter 120ms ease",
+      border: "1px solid rgba(15, 23, 42, 0.16)",
+      bgcolor: "#FFFFFF",
+      color: "rgba(11,27,51,0.92)",
+      "&:hover": { borderColor: "rgba(30, 102, 255, 0.30)", boxShadow: "0 8px 18px rgba(15, 23, 42, 0.08)" },
+      transition: "border-color 140ms ease, box-shadow 140ms ease, transform 120ms ease",
+      "&:active": { transform: "scale(0.98)" },
     };
   };
 
@@ -583,18 +605,15 @@ export default function NewStorePage({
       <CssBaseline />
 
       <div className="xnamai-page">
-        <AnimatedNeonLines />
-
         <div className="xnamai-page-content">
       {/* Topo */}
       <AppBar
         position="sticky"
         elevation={0}
         sx={{
-          borderBottom: "1px solid rgba(255,255,255,0.08)",
-          background:
-            "linear-gradient(180deg, rgba(7,7,18,0.92) 0%, rgba(7,7,18,0.70) 100%)",
-          backdropFilter: "saturate(160%) blur(10px)",
+          borderBottom: "1px solid rgba(15, 23, 42, 0.10)",
+          bgcolor: "rgba(255,255,255,0.88)",
+          backdropFilter: "saturate(180%) blur(10px)",
         }}
       >
         <Toolbar sx={{ position: "relative", minHeight: 64 }}>
@@ -617,7 +636,7 @@ export default function NewStorePage({
               fontWeight: 900,
               letterSpacing: 0.6,
               textTransform: "none",
-              color: "rgba(255,255,255,0.92)",
+              color: "text.primary",
               "&:hover": { bgcolor: "transparent" },
             }}
           >
@@ -642,9 +661,8 @@ export default function NewStorePage({
               px: 1,
               py: 0.5,
               borderRadius: 999,
-              border: "1px solid rgba(255,255,255,0.10)",
-              background:
-                "linear-gradient(90deg, rgba(45,226,230,0.08), rgba(255,46,147,0.08))",
+              border: "1px solid rgba(15, 23, 42, 0.10)",
+              bgcolor: "rgba(255,255,255,0.70)",
             }}
           >
             {navItems.map((it) => (
@@ -658,12 +676,12 @@ export default function NewStorePage({
                   py: 0.7,
                   fontWeight: 800,
                   textTransform: "none",
-                  color: it.id === "inicio" ? "secondary.main" : "rgba(255,255,255,0.78)",
-                  bgcolor: it.id === "inicio" ? "rgba(255,46,147,0.10)" : "transparent",
-                  border: it.id === "inicio" ? "1px solid rgba(255,46,147,0.28)" : "1px solid transparent",
+                  color: it.id === "inicio" ? "primary.main" : "rgba(11,27,51,0.78)",
+                  bgcolor: it.id === "inicio" ? "rgba(30, 102, 255, 0.10)" : "transparent",
+                  border: it.id === "inicio" ? "1px solid rgba(30, 102, 255, 0.20)" : "1px solid transparent",
                   "&:hover": {
-                    bgcolor: "rgba(255,255,255,0.06)",
-                    borderColor: "rgba(255,255,255,0.12)",
+                    bgcolor: "rgba(15, 23, 42, 0.04)",
+                    borderColor: "rgba(15, 23, 42, 0.10)",
                   },
                 }}
               >
@@ -672,7 +690,56 @@ export default function NewStorePage({
             ))}
           </Stack>
 
-          <IconButton color="inherit" sx={{ ml: "auto" }} onClick={handleOpenMenu}>
+          {/* Busca (sem placeholder) */}
+          <Paper
+            component="form"
+            role="search"
+            aria-label="Buscar"
+            onSubmit={(e) => e.preventDefault()}
+            variant="outlined"
+            sx={{
+              ml: "auto",
+              mr: 1,
+              px: 1.2,
+              py: 0.35,
+              borderRadius: 999,
+              display: { xs: "none", md: "flex" },
+              alignItems: "center",
+              gap: 0.8,
+              width: 320,
+              bgcolor: "rgba(244,248,255,0.90)",
+              borderColor: "rgba(15, 23, 42, 0.12)",
+              boxShadow: "0 10px 20px rgba(15, 23, 42, 0.06)",
+              "&:focus-within": {
+                borderColor: "rgba(30, 102, 255, 0.35)",
+                boxShadow: "0 0 0 4px rgba(30, 102, 255, 0.10)",
+              },
+            }}
+          >
+            <SearchRoundedIcon sx={{ color: "rgba(11,27,51,0.55)" }} />
+            <InputBase
+              inputProps={{
+                "aria-label": "Buscar",
+                placeholder: "",
+              }}
+              placeholder=""
+              sx={{
+                flex: 1,
+                fontSize: 14,
+                color: "text.primary",
+                "& input::placeholder": { color: "transparent" },
+              }}
+            />
+          </Paper>
+
+          <IconButton
+            color="inherit"
+            sx={{
+              color: "text.primary",
+            }}
+            onClick={handleOpenMenu}
+            aria-label={isAuthenticated ? "Abrir menu do usuário" : "Abrir menu de login"}
+          >
             <AccountCircleRoundedIcon />
           </IconButton>
           <Menu
@@ -703,9 +770,9 @@ export default function NewStorePage({
           sx: {
             width: 280,
             bgcolor: "background.paper",
-            borderRight: "1px solid rgba(255,255,255,0.08)",
+            borderRight: "1px solid rgba(15, 23, 42, 0.10)",
             backgroundImage:
-              "radial-gradient(120% 80% at 20% 20%, rgba(45,226,230,0.10) 0%, transparent 60%), radial-gradient(120% 80% at 80% 40%, rgba(255,46,147,0.10) 0%, transparent 60%)",
+              "radial-gradient(120% 90% at 10% 20%, rgba(30,102,255,0.10) 0%, transparent 60%), radial-gradient(120% 90% at 85% 35%, rgba(30,102,255,0.06) 0%, transparent 60%)",
           },
         }}
       >
@@ -730,7 +797,7 @@ export default function NewStorePage({
                 justifyContent: "flex-start",
                 fontWeight: 800,
                 textTransform: "none",
-                color: "rgba(255,255,255,0.88)",
+                color: "text.primary",
               }}
             >
               {it.label}
@@ -745,9 +812,9 @@ export default function NewStorePage({
                 mt: 1,
                 fontWeight: 900,
                 borderRadius: 999,
-                background:
-                  "linear-gradient(90deg, rgba(45,226,230,1) 0%, rgba(255,46,147,1) 100%)",
-                color: "#0B0B16",
+                bgcolor: "primary.main",
+                color: "#fff",
+                boxShadow: "0 12px 22px rgba(30, 102, 255, 0.25)",
               }}
             >
               Criar conta
@@ -766,13 +833,10 @@ export default function NewStorePage({
             sx={{
               p: { xs: 2.5, md: 4 },
               borderRadius: 4,
-              borderColor: "rgba(255,255,255,0.10)",
-              bgcolor: "rgba(11,11,22,0.56)",
-              backdropFilter: "blur(10px)",
+              bgcolor: "background.paper",
+              boxShadow: "0 16px 40px rgba(15, 23, 42, 0.08)",
               backgroundImage:
-                "radial-gradient(120% 120% at 10% 10%, rgba(45,226,230,0.14) 0%, transparent 55%), radial-gradient(140% 120% at 95% 15%, rgba(255,46,147,0.14) 0%, transparent 55%), linear-gradient(180deg, rgba(11,11,22,0.92) 0%, rgba(11,11,22,0.70) 100%)",
-              boxShadow:
-                "0 0 0 1px rgba(45,226,230,0.10), 0 0 22px rgba(45,226,230,0.10), 0 0 28px rgba(255,46,147,0.08)",
+                "radial-gradient(120% 120% at 0% 0%, rgba(30,102,255,0.10) 0%, transparent 55%), radial-gradient(120% 120% at 100% 20%, rgba(30,102,255,0.08) 0%, transparent 60%)",
             }}
           >
             <Stack spacing={2}>
@@ -794,12 +858,10 @@ export default function NewStorePage({
                     <Box
                       component="span"
                       sx={{
-                        background:
-                          "linear-gradient(90deg, rgba(45,226,230,1), rgba(255,46,147,1))",
+                        background: "linear-gradient(90deg, rgba(30,102,255,1), rgba(13,171,255,1))",
                         WebkitBackgroundClip: "text",
                         backgroundClip: "text",
                         WebkitTextFillColor: "transparent",
-                        textShadow: "0 0 18px rgba(45,226,230,0.18)",
                       }}
                     >
                       xNaMai
@@ -808,12 +870,12 @@ export default function NewStorePage({
 
                   <Typography
                     variant="h5"
-                    sx={{ fontWeight: 900, color: "rgba(255,255,255,0.92)" }}
+                    sx={{ fontWeight: 900, color: "primary.main" }}
                   >
                     “Participe, concorra e ainda receba 100% do valor de volta.”
                   </Typography>
 
-                  <Typography variant="body1" sx={{ opacity: 0.92, maxWidth: 720 }}>
+                  <Typography variant="body1" sx={{ color: "text.secondary", maxWidth: 720 }}>
                     A xNaMai apresenta o único sorteio em que você nunca sai perdendo. Ao
                     participar, você garante uma vaga na disputa por{" "}
                     <strong>R$ 5.000 em créditos</strong>, e ainda transforma o valor da sua
@@ -821,7 +883,7 @@ export default function NewStorePage({
                     site.
                   </Typography>
 
-                  <Typography variant="body2" sx={{ opacity: 0.75 }}>
+                  <Typography variant="body2" sx={{ color: "text.secondary" }}>
                     Sorteio válido até o preenchimento total da tabela. Baseado no resultado
                     oficial da Loteria Federal (Caixa Econômica Federal).
                   </Typography>
@@ -832,11 +894,10 @@ export default function NewStorePage({
                   sx={{
                     width: { xs: "100%", md: 360 },
                     borderRadius: 4,
-                    borderColor: "rgba(255,255,255,0.10)",
-                    background:
-                      "linear-gradient(180deg, rgba(255,46,147,0.10) 0%, rgba(45,226,230,0.08) 100%)",
-                    boxShadow:
-                      "0 0 0 1px rgba(255,46,147,0.18), 0 0 26px rgba(255,46,147,0.12), 0 0 22px rgba(45,226,230,0.10)",
+                    bgcolor: "rgba(244,248,255,0.80)",
+                    backgroundImage:
+                      "radial-gradient(120% 90% at 30% 20%, rgba(30,102,255,0.20) 0%, transparent 65%), linear-gradient(180deg, rgba(255,255,255,0.88) 0%, rgba(244,248,255,0.88) 100%)",
+                    boxShadow: "0 18px 40px rgba(15, 23, 42, 0.10)",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
@@ -851,8 +912,7 @@ export default function NewStorePage({
                         letterSpacing: 2,
                         fontSize: 34,
                         textTransform: "uppercase",
-                        background:
-                          "linear-gradient(90deg, rgba(255,46,147,1), rgba(166,66,255,1), rgba(45,226,230,1))",
+                        background: "linear-gradient(90deg, rgba(30,102,255,1), rgba(13,171,255,1))",
                         WebkitBackgroundClip: "text",
                         backgroundClip: "text",
                         WebkitTextFillColor: "transparent",
@@ -860,11 +920,11 @@ export default function NewStorePage({
                     >
                       xNaMai
                     </Typography>
-                    <Typography sx={{ opacity: 0.85, fontWeight: 800 }}>
+                    <Typography sx={{ color: "text.secondary", fontWeight: 800 }}>
                       Sorteios
                     </Typography>
-                    <Typography variant="caption" sx={{ opacity: 0.7, textAlign: "center" }}>
-                      Premium • Futurista • Neon
+                    <Typography variant="caption" sx={{ color: "text.secondary", textAlign: "center" }}>
+                      Premium • Seguro • Transparente
                     </Typography>
                   </Stack>
                 </Paper>
@@ -878,13 +938,10 @@ export default function NewStorePage({
             sx={{
               p: { xs: 1.5, md: 3 },
               borderRadius: 4,
-              borderColor: "rgba(255,255,255,0.10)",
-              bgcolor: "rgba(11,11,22,0.58)",
-              backdropFilter: "blur(10px)",
-              boxShadow:
-                "0 0 0 1px rgba(45,226,230,0.10), 0 0 26px rgba(45,226,230,0.10), 0 0 26px rgba(255,46,147,0.08)",
+              bgcolor: "background.paper",
+              boxShadow: "0 18px 44px rgba(15, 23, 42, 0.08)",
               backgroundImage:
-                "radial-gradient(120% 80% at 12% 0%, rgba(45,226,230,0.10) 0%, transparent 55%), radial-gradient(120% 80% at 88% 8%, rgba(255,46,147,0.10) 0%, transparent 55%)",
+                "radial-gradient(120% 90% at 0% 0%, rgba(30,102,255,0.10) 0%, transparent 55%), radial-gradient(120% 90% at 100% 0%, rgba(30,102,255,0.08) 0%, transparent 60%)",
             }}
           >
             <Box id="sobre" />
@@ -894,11 +951,9 @@ export default function NewStorePage({
                 mb: 2,
                 p: { xs: 1.25, md: 1.5 },
                 borderRadius: 3,
-                border: "1px solid rgba(255,255,255,0.10)",
+                border: "1px solid rgba(15, 23, 42, 0.10)",
                 background:
-                  "linear-gradient(90deg, rgba(45,226,230,0.12), rgba(166,66,255,0.10), rgba(255,46,147,0.12))",
-                boxShadow:
-                  "0 0 0 1px rgba(255,46,147,0.10), 0 0 18px rgba(45,226,230,0.10)",
+                  "linear-gradient(90deg, rgba(244,248,255,0.90), rgba(30,102,255,0.08), rgba(244,248,255,0.90))",
               }}
             >
               <Typography
@@ -907,12 +962,7 @@ export default function NewStorePage({
                   fontWeight: 900,
                   textAlign: "center",
                   letterSpacing: 1,
-                  background:
-                    "linear-gradient(90deg, rgba(45,226,230,1), rgba(166,66,255,1), rgba(255,46,147,1))",
-                  WebkitBackgroundClip: "text",
-                  backgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  textShadow: "0 0 18px rgba(45,226,230,0.16)",
+                  color: "text.primary",
                 }}
               >
                 {bannerTitle || "SORTEIO TISSOT PRX DAMASCUS"}
@@ -931,9 +981,9 @@ export default function NewStorePage({
                   size="small"
                   label="DISPONÍVEL"
                   sx={{
-                    bgcolor: "rgba(49,247,165,0.16)",
-                    border: "1px solid rgba(49,247,165,0.45)",
-                    color: "rgba(255,255,255,0.92)",
+                    bgcolor: "rgba(30,102,255,0.10)",
+                    border: "1px solid rgba(30,102,255,0.25)",
+                    color: "rgba(11,27,51,0.90)",
                     fontWeight: 900,
                   }}
                 />
@@ -941,9 +991,9 @@ export default function NewStorePage({
                   size="small"
                   label="RESERVADO"
                   sx={{
-                    bgcolor: "rgba(255,214,102,0.14)",
-                    border: "1px solid rgba(255,214,102,0.45)",
-                    color: "rgba(255,255,255,0.90)",
+                    bgcolor: "rgba(242,183,5,0.16)",
+                    border: "1px solid rgba(242,183,5,0.35)",
+                    color: "rgba(11,27,51,0.90)",
                     fontWeight: 900,
                   }}
                 />
@@ -951,13 +1001,13 @@ export default function NewStorePage({
                   size="small"
                   label="INDISPONÍVEL"
                   sx={{
-                    bgcolor: "rgba(255,46,147,0.12)",
-                    border: "1px solid rgba(255,46,147,0.40)",
-                    color: "rgba(255,255,255,0.90)",
+                    bgcolor: "rgba(15,23,42,0.08)",
+                    border: "1px solid rgba(15,23,42,0.18)",
+                    color: "rgba(11,27,51,0.80)",
                     fontWeight: 900,
                   }}
                 />
-                <Typography variant="body2" sx={{ ml: 0.5, opacity: 0.9 }}>
+                <Typography variant="body2" sx={{ ml: 0.5, color: "text.secondary" }}>
                   {Number.isFinite(limitUsage.max) && Number.isFinite(limitUsage.current)
                     ? `• Você tem ${Math.max(
                         0,
@@ -966,7 +1016,7 @@ export default function NewStorePage({
                     : " "}
                 </Typography>
                 {!!selecionados.length && (
-                  <Typography variant="body2" sx={{ ml: 1, opacity: 0.8 }}>
+                  <Typography variant="body2" sx={{ ml: 1, color: "text.secondary" }}>
                     • {selecionados.length} selecionado(s) (máx. {maxSelect} por seleção)
                   </Typography>
                 )}
@@ -1000,6 +1050,11 @@ export default function NewStorePage({
                       height: "100%",
                       width: "100%",
                       boxSizing: "border-box",
+                      p: { xs: 1, md: 1.2 },
+                      borderRadius: 3,
+                      border: "1px solid rgba(15, 23, 42, 0.10)",
+                      background:
+                        "linear-gradient(180deg, rgba(244,248,255,0.72) 0%, rgba(255,255,255,0.95) 100%)",
                     }}
                   >
                     {Array.from({ length: 100 }).map((_, idx) => {
@@ -1021,21 +1076,6 @@ export default function NewStorePage({
                             fontWeight: 950,
                             fontVariantNumeric: "tabular-nums",
                             position: "relative",
-                            border: sold
-                              ? "1px solid rgba(255,46,147,0.42)"
-                              : isSelecionado(idx) || isReservado(idx)
-                                ? "1px solid rgba(255,214,102,0.50)"
-                                : "1px solid rgba(255,46,147,0.40)",
-                            bgcolor: sold
-                              ? "rgba(255,46,147,0.10)"
-                              : isSelecionado(idx) || isReservado(idx)
-                                ? "rgba(255,214,102,0.10)"
-                                : "rgba(11,11,22,0.70)",
-                            color: sold ? "rgba(255,255,255,0.78)" : "rgba(255,255,255,0.92)",
-                            boxShadow: sold
-                              ? "0 0 12px rgba(255,46,147,0.10)"
-                              : "0 0 14px rgba(255,46,147,0.10)",
-                            "&:hover": sold ? undefined : { filter: "brightness(1.06)" },
                           }}
                         >
                           <Stack spacing={0.2} alignItems="center" sx={{ pointerEvents: "none" }}>
@@ -1053,8 +1093,9 @@ export default function NewStorePage({
                                   fontSize: 10,
                                   fontWeight: 900,
                                   letterSpacing: 0.6,
-                                  bgcolor: "rgba(0,0,0,0.45)",
-                                  border: "1px solid rgba(255,255,255,0.10)",
+                                  bgcolor: "rgba(11,27,51,0.08)",
+                                  border: "1px solid rgba(15,23,42,0.10)",
+                                  color: "rgba(11,27,51,0.80)",
                                 }}
                               >
                                 {initials}
@@ -1085,9 +1126,10 @@ export default function NewStorePage({
                     sx={{
                       borderRadius: 999,
                       fontWeight: 900,
-                      borderColor: "rgba(255,255,255,0.14)",
-                      color: "rgba(255,255,255,0.85)",
-                      "&:hover": { borderColor: "rgba(255,255,255,0.22)", bgcolor: "rgba(255,255,255,0.04)" },
+                      borderColor: "rgba(15, 23, 42, 0.16)",
+                      color: "text.primary",
+                      bgcolor: "#fff",
+                      "&:hover": { borderColor: "rgba(30, 102, 255, 0.30)", bgcolor: "rgba(244,248,255,0.90)" },
                     }}
                   >
                     Limpar seleção
@@ -1100,11 +1142,9 @@ export default function NewStorePage({
                     sx={{
                       borderRadius: 999,
                       fontWeight: 1000,
-                      color: "#0B0B16",
-                      background:
-                        "linear-gradient(90deg, rgba(255,46,147,1) 0%, rgba(45,226,230,1) 100%)",
-                      boxShadow:
-                        "0 0 0 1px rgba(255,46,147,0.18), 0 0 22px rgba(255,46,147,0.12), 0 0 22px rgba(45,226,230,0.10)",
+                      color: "#fff",
+                      bgcolor: "primary.main",
+                      boxShadow: "0 14px 24px rgba(30, 102, 255, 0.26)",
                     }}
                   >
                     Continuar
@@ -1116,15 +1156,14 @@ export default function NewStorePage({
                   sx={{
                     p: 2,
                     borderRadius: 3,
-                    borderColor: "rgba(255,255,255,0.10)",
-                    bgcolor: "rgba(11,11,22,0.52)",
-                    backdropFilter: "blur(10px)",
+                    bgcolor: "background.paper",
+                    boxShadow: "0 14px 28px rgba(15, 23, 42, 0.06)",
                   }}
                 >
                   <Typography sx={{ fontWeight: 900, mb: 0.5 }}>
                     Cartão Presente Digital
                   </Typography>
-                  <Typography variant="body2" sx={{ opacity: 0.8 }}>
+                  <Typography variant="body2" sx={{ color: "text.secondary" }}>
                     Cada número selecionado gera um Cartão Presente Digital no valor da sua participação.
                   </Typography>
                 </Paper>
@@ -1134,10 +1173,9 @@ export default function NewStorePage({
                   sx={{
                     p: 2,
                     borderRadius: 3,
-                    borderColor: "rgba(255,46,147,0.22)",
-                    background:
-                      "linear-gradient(180deg, rgba(255,46,147,0.10) 0%, rgba(166,66,255,0.08) 50%, rgba(45,226,230,0.08) 100%)",
-                    backdropFilter: "blur(10px)",
+                    bgcolor: "rgba(244,248,255,0.85)",
+                    borderColor: "rgba(30, 102, 255, 0.18)",
+                    boxShadow: "0 14px 28px rgba(15, 23, 42, 0.06)",
                   }}
                 >
                   <Typography sx={{ fontWeight: 1000, letterSpacing: 0.8 }}>
@@ -1146,7 +1184,7 @@ export default function NewStorePage({
                   <Typography sx={{ fontWeight: 1000, fontSize: 22 }}>
                     R$ 5.000 EM CRÉDITOS
                   </Typography>
-                  <Typography variant="body2" sx={{ opacity: 0.78 }}>
+                  <Typography variant="body2" sx={{ color: "text.secondary" }}>
                     Resultado via Loteria Federal
                   </Typography>
                 </Paper>
@@ -1156,14 +1194,13 @@ export default function NewStorePage({
                   sx={{
                     p: 1.8,
                     borderRadius: 3,
-                    borderColor: "rgba(255,255,255,0.10)",
-                    bgcolor: "rgba(11,11,22,0.42)",
-                    backdropFilter: "blur(10px)",
+                    bgcolor: "background.paper",
+                    boxShadow: "0 14px 28px rgba(15, 23, 42, 0.06)",
                   }}
                 >
                   <Stack direction="row" spacing={1} alignItems="center">
                     <LockRoundedIcon sx={{ color: "primary.main" }} />
-                    <Typography variant="body2" sx={{ opacity: 0.85 }}>
+                    <Typography variant="body2" sx={{ color: "text.secondary" }}>
                       Seus dados e participação estão 100% seguros e criptografados.
                     </Typography>
                   </Stack>
@@ -1187,6 +1224,73 @@ export default function NewStorePage({
             </Box>
           </Paper>
           {/* === FIM CARTELA === */}
+
+          {/* === BENEFÍCIOS (barra inferior) === */}
+          <Paper
+            variant="outlined"
+            sx={{
+              p: { xs: 2, md: 2.5 },
+              borderRadius: 4,
+              bgcolor: "rgba(244,248,255,0.85)",
+              borderColor: "rgba(15, 23, 42, 0.10)",
+              boxShadow: "0 16px 36px rgba(15, 23, 42, 0.06)",
+            }}
+          >
+            <Stack
+              direction={{ xs: "column", md: "row" }}
+              spacing={{ xs: 1.4, md: 2 }}
+              alignItems={{ xs: "stretch", md: "center" }}
+              justifyContent="space-between"
+            >
+              <Stack direction="row" spacing={1.2} alignItems="center" sx={{ flex: 1 }}>
+                <VerifiedUserRoundedIcon sx={{ color: "primary.main" }} />
+                <Box>
+                  <Typography sx={{ fontWeight: 900, lineHeight: 1.1 }}>
+                    Ambiente 100% seguro
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                    Proteção e transparência em todo o processo.
+                  </Typography>
+                </Box>
+              </Stack>
+
+              <Divider
+                flexItem
+                orientation="vertical"
+                sx={{ display: { xs: "none", md: "block" }, borderColor: "rgba(15,23,42,0.10)" }}
+              />
+
+              <Stack direction="row" spacing={1.2} alignItems="center" sx={{ flex: 1 }}>
+                <ReplayRoundedIcon sx={{ color: "primary.main" }} />
+                <Box>
+                  <Typography sx={{ fontWeight: 900, lineHeight: 1.1 }}>
+                    100% do valor de volta
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                    Créditos no Cartão Presente Digital.
+                  </Typography>
+                </Box>
+              </Stack>
+
+              <Divider
+                flexItem
+                orientation="vertical"
+                sx={{ display: { xs: "none", md: "block" }, borderColor: "rgba(15,23,42,0.10)" }}
+              />
+
+              <Stack direction="row" spacing={1.2} alignItems="center" sx={{ flex: 1 }}>
+                <LockRoundedIcon sx={{ color: "primary.main" }} />
+                <Box>
+                  <Typography sx={{ fontWeight: 900, lineHeight: 1.1 }}>
+                    Transparência total
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                    Baseado no resultado oficial da Caixa.
+                  </Typography>
+                </Box>
+              </Stack>
+            </Stack>
+          </Paper>
 
           {/* Demais seções */}
           <Paper variant="outlined" sx={{ p: { xs: 2, md: 3 } }}>

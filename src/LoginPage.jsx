@@ -12,6 +12,7 @@ import ArrowBackIosNewRoundedIcon from "@mui/icons-material/ArrowBackIosNewRound
 import xNamaiLogo from "./assets/branding/xnamai-logo.svg";
 import { useAuth } from "./authContext";
 import { apiJoin } from "./lib/api";
+import "./styles/xnamai-login.css";
 
 /** ===== DEBUG ===== */
 const DBG =
@@ -20,8 +21,14 @@ const DBG =
 const dlog = (...a) => { if (DBG) console.log("[login]", ...a); };
 
 const theme = createTheme({
-  palette: { mode: "dark", primary: { main: "#67C23A" }, background: { default: "#0E0E0E", paper: "#121212" } },
-  shape: { borderRadius: 12 },
+  palette: {
+    mode: "light",
+    primary: { main: "#1E66FF" },
+    secondary: { main: "#0B5FFF" },
+    background: { default: "#F4F8FF", paper: "#FFFFFF" },
+    text: { primary: "#0B1B33", secondary: "rgba(11,27,51,0.72)" },
+  },
+  shape: { borderRadius: 16 },
   typography: { fontFamily: ['Inter','system-ui','Segoe UI','Roboto','Arial'].join(',') }
 });
 
@@ -123,94 +130,180 @@ export default function LoginPage() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <AppBar position="sticky" elevation={0} sx={{ borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
-        <Toolbar sx={{ position: "relative", minHeight: 64 }}>
-          <IconButton edge="start" color="inherit" onClick={() => navigate(-1)} aria-label="Voltar">
-            <ArrowBackIosNewRoundedIcon />
-          </IconButton>
-          <Box component={RouterLink} to="/"
-               sx={{ position: "absolute", left: "50%", top: "50%", transform: "translate(-50%, -50%)", display: "flex", alignItems: "center" }}>
-            <Box component="img" src={xNamaiLogo} alt="xNaMai Sorteios" sx={{ height: 40, objectFit: "contain" }} />
-          </Box>
-        </Toolbar>
-      </AppBar>
+      <div className="xnamai-auth">
+        <div className="xnamai-auth__bg" />
 
-      <Container maxWidth="sm" sx={{ py: { xs: 4, md: 8 } }}>
-        <Paper sx={{ p: { xs: 3, md: 4 }, borderRadius: 3, bgcolor: "background.paper" }} elevation={0} variant="outlined">
-          <Stack spacing={2} component="form" onSubmit={handleSubmit}>
-            <Typography variant="h5" fontWeight={800}>Entrar</Typography>
-            <Typography variant="body2" sx={{ opacity: 0.8 }}>
-              Use seu e-mail e senha para acessar sua área.
-            </Typography>
+        <div className="xnamai-auth__content">
+          <AppBar
+            position="sticky"
+            elevation={0}
+            sx={{
+              borderBottom: "1px solid rgba(15, 23, 42, 0.10)",
+              bgcolor: "rgba(255,255,255,0.86)",
+              backdropFilter: "saturate(180%) blur(10px)",
+              color: "text.primary",
+            }}
+          >
+            <Toolbar sx={{ position: "relative", minHeight: 64 }}>
+              <IconButton edge="start" onClick={() => navigate(-1)} aria-label="Voltar" sx={{ color: "text.primary" }}>
+                <ArrowBackIosNewRoundedIcon />
+              </IconButton>
+              <Box
+                component={RouterLink}
+                to="/"
+                sx={{
+                  position: "absolute",
+                  left: "50%",
+                  top: "50%",
+                  transform: "translate(-50%, -50%)",
+                  display: "flex",
+                  alignItems: "center",
+                }}
+                aria-label="Voltar para a página inicial"
+              >
+                <Box
+                  component="img"
+                  src={xNamaiLogo}
+                  alt="xNaMai Sorteios"
+                  sx={{ height: 36, objectFit: "contain" }}
+                />
+              </Box>
+            </Toolbar>
+          </AppBar>
 
-            {error && <Alert severity="error">{error}</Alert>}
-
-            <TextField label="E-mail" type="email" value={email} onChange={(e) => setEmail(e.target.value)} fullWidth required autoComplete="email" />
-            <TextField
-              label="Senha"
-              type={showPass ? "text" : "password"}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              fullWidth
-              required
-              autoComplete="current-password"
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton onClick={() => setShowPass((s) => !s)} edge="end" aria-label="mostrar/ocultar senha">
-                      {showPass ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  </InputAdornment>
-                )
+          <Container
+            maxWidth="sm"
+            sx={{
+              py: { xs: 5, md: 10 },
+              minHeight: "calc(100vh - 64px)",
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            <Paper
+              className="xnamai-auth__card"
+              sx={{
+                p: { xs: 3, md: 4 },
+                borderRadius: 4,
+                width: "100%",
               }}
-            />
+              elevation={0}
+              variant="outlined"
+            >
+              <Stack spacing={2} component="form" onSubmit={handleSubmit}>
+                <Stack direction="row" spacing={1.4} alignItems="center">
+                  <Box component="img" src={xNamaiLogo} alt="xNaMai" sx={{ height: 32, width: "auto" }} />
+                  <Box>
+                    <Typography variant="h5" fontWeight={950} sx={{ letterSpacing: -0.3 }}>
+                      Entrar na sua conta
+                    </Typography>
+                    <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                      Acesse com segurança para acompanhar suas participações.
+                    </Typography>
+                  </Box>
+                </Stack>
 
-            <Stack direction="row" alignItems="center" justifyContent="space-between" flexWrap="wrap">
-              <FormControlLabel control={<Checkbox checked={remember} onChange={(e) => setRemember(e.target.checked)} />} label="Manter-me conectado" />
-              <Link component="button" type="button" onClick={openForgot} underline="hover" sx={{ fontSize: 14, opacity: 0.9 }}>
-                Esqueci minha senha
-              </Link>
-            </Stack>
+                {error && <Alert severity="error">{error}</Alert>}
 
-            <Button type="submit" variant="contained" color="primary" size="large" disabled={loading} sx={{ py: 1.2, fontWeight: 700 }}>
-              {loading ? "Entrando..." : "Entrar"}
-            </Button>
+                <TextField
+                  label="E-mail"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  fullWidth
+                  required
+                  autoComplete="email"
+                  sx={{
+                    "& .MuiOutlinedInput-root": { bgcolor: "#fff" },
+                  }}
+                />
+                <TextField
+                  label="Senha"
+                  type={showPass ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  fullWidth
+                  required
+                  autoComplete="current-password"
+                  sx={{
+                    "& .MuiOutlinedInput-root": { bgcolor: "#fff" },
+                  }}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton onClick={() => setShowPass((s) => !s)} edge="end" aria-label="mostrar/ocultar senha">
+                          {showPass ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                      </InputAdornment>
+                    )
+                  }}
+                />
 
-            <Button component={RouterLink} to="/cadastro" variant="text" sx={{ fontWeight: 700, mt: 1 }}>
-              Criar conta
-            </Button>
-          </Stack>
-        </Paper>
-      </Container>
+                <Stack direction="row" alignItems="center" justifyContent="space-between" flexWrap="wrap">
+                  <FormControlLabel
+                    control={<Checkbox checked={remember} onChange={(e) => setRemember(e.target.checked)} />}
+                    label="Manter-me conectado"
+                  />
+                  <Link component="button" type="button" onClick={openForgot} underline="hover" sx={{ fontSize: 14 }}>
+                    Esqueci minha senha
+                  </Link>
+                </Stack>
 
-      {/* Modal: Esqueci minha senha */}
-      <Dialog open={forgotOpen} onClose={closeForgot} maxWidth="xs" fullWidth PaperProps={{ sx: { borderRadius: 3 } }}>
-        <DialogTitle sx={{ fontWeight: 900 }}>
-          {forgotSent ? "E-mail enviado" : "Resetar senha"}
-        </DialogTitle>
-        <DialogContent sx={{ pt: 1 }}>
-          {!forgotSent ? (
-            <>
-              {forgotError && <Alert severity="error" sx={{ mb: 2 }}>{forgotError}</Alert>}
-              <TextField label="Informe seu e-mail" type="email" fullWidth autoFocus value={forgotEmail} onChange={(e) => setForgotEmail(e.target.value)} />
-            </>
-          ) : (
-            <Alert severity="success">Solicitação registrada para <strong>{sentTo}</strong>.</Alert>
-          )}
-        </DialogContent>
-        <DialogActions sx={{ px: 3, pb: 2 }}>
-          {!forgotSent ? (
-            <>
-              <Button onClick={closeForgot} disabled={forgotLoading}>Cancelar</Button>
-              <Button onClick={handleResetPassword} variant="contained" color="primary" disabled={forgotLoading}>
-                {forgotLoading ? "Enviando..." : "Resetar senha"}
-              </Button>
-            </>
-          ) : (
-            <Button onClick={closeForgot} variant="contained" color="success">OK</Button>
-          )}
-        </DialogActions>
-      </Dialog>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  size="large"
+                  disabled={loading}
+                  sx={{
+                    py: 1.2,
+                    fontWeight: 900,
+                    borderRadius: 999,
+                    boxShadow: "0 14px 24px rgba(30, 102, 255, 0.24)",
+                    textTransform: "none",
+                    "&:hover": { boxShadow: "0 18px 32px rgba(30, 102, 255, 0.28)" },
+                  }}
+                >
+                  {loading ? "Entrando..." : "Entrar"}
+                </Button>
+
+                <Button component={RouterLink} to="/cadastro" variant="text" sx={{ fontWeight: 800, mt: 0.5, textTransform: "none" }}>
+                  Criar conta
+                </Button>
+              </Stack>
+            </Paper>
+          </Container>
+
+          {/* Modal: Esqueci minha senha */}
+          <Dialog open={forgotOpen} onClose={closeForgot} maxWidth="xs" fullWidth PaperProps={{ sx: { borderRadius: 3 } }}>
+            <DialogTitle sx={{ fontWeight: 900 }}>
+              {forgotSent ? "E-mail enviado" : "Resetar senha"}
+            </DialogTitle>
+            <DialogContent sx={{ pt: 1 }}>
+              {!forgotSent ? (
+                <>
+                  {forgotError && <Alert severity="error" sx={{ mb: 2 }}>{forgotError}</Alert>}
+                  <TextField label="Informe seu e-mail" type="email" fullWidth autoFocus value={forgotEmail} onChange={(e) => setForgotEmail(e.target.value)} />
+                </>
+              ) : (
+                <Alert severity="success">Solicitação registrada para <strong>{sentTo}</strong>.</Alert>
+              )}
+            </DialogContent>
+            <DialogActions sx={{ px: 3, pb: 2 }}>
+              {!forgotSent ? (
+                <>
+                  <Button onClick={closeForgot} disabled={forgotLoading}>Cancelar</Button>
+                  <Button onClick={handleResetPassword} variant="contained" color="primary" disabled={forgotLoading}>
+                    {forgotLoading ? "Enviando..." : "Resetar senha"}
+                  </Button>
+                </>
+              ) : (
+                <Button onClick={closeForgot} variant="contained" color="success">OK</Button>
+              )}
+            </DialogActions>
+          </Dialog>
+        </div>
+      </div>
     </ThemeProvider>
   );
 }
