@@ -1,0 +1,89 @@
+.xnamai-page {
+  background: #F3F8FF;
+}
+
+/* Fundo com shapes (bem próximo da referência) */
+.xnamai-page::before,
+.xnamai-page::after {
+  content: "";
+  position: fixed;
+  inset: -10%;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(1100px 720px at 14% 86%, rgba(30, 102, 255, 0.16) 0%, rgba(30, 102, 255, 0.06) 45%, transparent 70%),
+    radial-gradient(920px 640px at 92% 62%, rgba(13, 171, 255, 0.14) 0%, rgba(13, 171, 255, 0.06) 46%, transparent 74%),
+    radial-gradient(740px 520px at 78% 18%, rgba(30, 102, 255, 0.12) 0%, rgba(30, 102, 255, 0.05) 48%, transparent 76%);
+}
+
+.xnamai-page::after {
+  opacity: 0.7;
+  filter: blur(0.2px);
+}
+
+.xnamai-page-content {
+  position: relative;
+  z-index: 1;
+}
+
+/* Header minimalista */
+.xnamai-header__navItem {
+  position: relative;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  color: rgba(11, 27, 51, 0.72);
+}
+
+.xnamai-header__navItem--active {
+  color: #1E66FF;
+}
+
+.xnamai-header__navItem--active::after {
+  content: "";
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: -12px;
+  height: 3px;
+  border-radius: 3px;
+  background: #1E66FF;
+}
+
+/* Hero com shapes internos */
+.xnamai-hero {
+  position: relative;
+  overflow: hidden;
+}
+
+.xnamai-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(900px 420px at 20% 25%, rgba(30,102,255,0.12) 0%, rgba(30,102,255,0.05) 44%, transparent 72%),
+    radial-gradient(900px 520px at 86% 70%, rgba(13,171,255,0.16) 0%, rgba(13,171,255,0.06) 45%, transparent 74%);
+}
+
+/* Dots no canto superior direito (fora do hero) */
+.xnamai-heroDots {
+  position: absolute;
+  right: 8px;
+  top: 10px;
+  width: 110px;
+  height: 110px;
+  opacity: 0.35;
+  background-image: radial-gradient(rgba(30, 102, 255, 0.70) 1.4px, transparent 1.5px);
+  background-size: 10px 10px;
+  border-radius: 16px;
+  pointer-events: none;
+}
+
+@media (max-width: 900px) {
+  .xnamai-heroDots {
+    display: none;
+  }
+}
+

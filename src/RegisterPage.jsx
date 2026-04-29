@@ -18,16 +18,19 @@ import {
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
 import { apiUrl } from "./config/api";
+import BrandLogo from "./components/branding/BrandLogo";
+import "./styles/xnamai-register.css";
 
 const theme = createTheme({
   palette: {
-    mode: 'dark',
-    primary: { main: '#67C23A' },
-    secondary: { main: '#FFC107' },
-    error: { main: '#D32F2F' },
-    background: { default: '#0E0E0E', paper: '#121212' },
+    mode: "light",
+    primary: { main: "#1E66FF" },
+    secondary: { main: "#0B5FFF" },
+    error: { main: "#D32F2F" },
+    background: { default: "#F4F8FF", paper: "#FFFFFF" },
+    text: { primary: "#0B1B33", secondary: "rgba(11,27,51,0.72)" },
   },
-  shape: { borderRadius: 12 },
+  shape: { borderRadius: 16 },
   typography: {
     fontFamily: ['Inter', 'system-ui', 'Segoe UI', 'Roboto', 'Arial'].join(','),
   },
@@ -115,96 +118,176 @@ export default function RegisterPage() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <AppBar position="sticky" elevation={0} sx={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
-        <Toolbar>
-          <IconButton edge="start" color="inherit" onClick={() => navigate(-1)} aria-label="Voltar">
-            <ArrowBackIosNewIcon />
-          </IconButton>
-          <Box sx={{ flexGrow: 1 }} />
-          <IconButton color="inherit">
-            <AccountCircleRoundedIcon />
-          </IconButton>
-        </Toolbar>
-      </AppBar>
+      <div className="xnamai-auth">
+        <div className="xnamai-auth__bg" />
 
-      <Container maxWidth="sm" sx={{ py: { xs: 4, md: 6 } }}>
-        <Paper variant="outlined" sx={{ p: { xs: 3, md: 4 }, bgcolor: 'background.paper' }}>
-          <Stack spacing={2}>
-            <Typography variant="h4" fontWeight={800} textAlign="center">
-              Criar conta
-            </Typography>
-            <Typography variant="body2" textAlign="center" sx={{ opacity: 0.8 }}>
-              Use seus dados para acessar a área do cliente.
-            </Typography>
+        <div className="xnamai-auth__content">
+          <AppBar
+            position="sticky"
+            elevation={0}
+            sx={{
+              borderBottom: "1px solid rgba(15, 23, 42, 0.10)",
+              bgcolor: "rgba(255,255,255,0.86)",
+              backdropFilter: "saturate(180%) blur(10px)",
+              color: "text.primary",
+            }}
+          >
+            <Toolbar sx={{ position: "relative", minHeight: 64 }}>
+              <IconButton edge="start" onClick={() => navigate(-1)} aria-label="Voltar" sx={{ color: "text.primary" }}>
+                <ArrowBackIosNewIcon />
+              </IconButton>
 
-            <Box component="form" onSubmit={handleSubmit} noValidate>
-              <Stack spacing={2}>
-                <TextField
-                  label="Nome completo"
-                  name="name"
-                  value={form.name}
-                  onChange={onChange}
-                  fullWidth
-                  required
-                  error={!!errors.name}
-                  helperText={errors.name}
-                />
+              <Box
+                component={RouterLink}
+                to="/"
+                sx={{
+                  position: "absolute",
+                  left: "50%",
+                  top: "50%",
+                  transform: "translate(-50%, -50%)",
+                  display: "flex",
+                  alignItems: "center",
+                }}
+                aria-label="Voltar para a página inicial"
+              >
+                <BrandLogo size={32} />
+              </Box>
 
-                <TextField
-                  label="E-mail"
-                  type="email"
-                  name="email"
-                  value={form.email}
-                  onChange={onChange}
-                  fullWidth
-                  required
-                  error={!!errors.email}
-                  helperText={errors.email}
-                />
+              <IconButton color="inherit" sx={{ ml: "auto", color: "text.primary" }} aria-label="Conta">
+                <AccountCircleRoundedIcon />
+              </IconButton>
+            </Toolbar>
+          </AppBar>
 
-                <TextField
-                  label="Celular (com DDD)"
-                  name="phone"
-                  value={form.phone}
-                  onChange={onChange}
-                  placeholder="(11) 90000-0000"
-                  inputMode="tel"
-                  fullWidth
-                  required
-                  error={!!errors.phone}
-                  helperText={errors.phone}
-                />
+          <Container
+            maxWidth="sm"
+            sx={{
+              py: { xs: 5, md: 10 },
+              minHeight: "calc(100vh - 64px)",
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            <Paper
+              className="xnamai-auth__card"
+              variant="outlined"
+              elevation={0}
+              sx={{
+                p: { xs: 3, md: 4 },
+                borderRadius: 4,
+                width: "100%",
+              }}
+            >
+              <Stack spacing={2.2}>
+                <Box>
+                  <Typography
+                    variant="h4"
+                    fontWeight={950}
+                    sx={{ color: "primary.main", letterSpacing: -0.4 }}
+                  >
+                    Criar conta
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: "text.secondary", mt: 0.4 }}>
+                    Use seus dados para acessar a área do cliente.
+                  </Typography>
+                </Box>
 
-                <TextField
-                  label="Senha"
-                  type="password"
-                  name="password"
-                  value={form.password}
-                  onChange={onChange}
-                  fullWidth
-                  required
-                  error={!!errors.password}
-                  helperText={errors.password}
-                />
+                <Box component="form" onSubmit={handleSubmit} noValidate>
+                  <Stack spacing={2}>
+                    <TextField
+                      label="Nome completo"
+                      name="name"
+                      value={form.name}
+                      onChange={onChange}
+                      fullWidth
+                      required
+                      error={!!errors.name}
+                      helperText={errors.name}
+                      sx={{ "& .MuiOutlinedInput-root": { bgcolor: "#fff" } }}
+                    />
 
-                <Button
-                  type="submit"
-                  variant="contained"
-                  size="large"
-                  disabled={!canSubmit}
-                  sx={{ py: 1.2, fontWeight: 700 }}
-                >
-                  {loading ? 'Criando...' : 'Criar conta'}
-                </Button>
+                    <TextField
+                      label="E-mail"
+                      type="email"
+                      name="email"
+                      value={form.email}
+                      onChange={onChange}
+                      fullWidth
+                      required
+                      error={!!errors.email}
+                      helperText={errors.email}
+                      sx={{ "& .MuiOutlinedInput-root": { bgcolor: "#fff" } }}
+                    />
 
-                <Button component={RouterLink} to="/login" variant="text" sx={{ fontWeight: 700 }}>
-                  Já tenho conta — entrar
-                </Button>
+                    <TextField
+                      label="Celular (com DDD)"
+                      name="phone"
+                      value={form.phone}
+                      onChange={onChange}
+                      placeholder="(11) 90000-0000"
+                      inputMode="tel"
+                      fullWidth
+                      required
+                      error={!!errors.phone}
+                      helperText={errors.phone}
+                      sx={{ "& .MuiOutlinedInput-root": { bgcolor: "#fff" } }}
+                    />
+
+                    <TextField
+                      label="Senha"
+                      type="password"
+                      name="password"
+                      value={form.password}
+                      onChange={onChange}
+                      fullWidth
+                      required
+                      error={!!errors.password}
+                      helperText={errors.password}
+                      sx={{ "& .MuiOutlinedInput-root": { bgcolor: "#fff" } }}
+                    />
+
+                    <Button
+                      type="submit"
+                      variant="contained"
+                      size="large"
+                      disabled={!canSubmit}
+                      sx={{
+                        py: 1.2,
+                        fontWeight: 900,
+                        borderRadius: 999,
+                        textTransform: "none",
+                        backgroundImage: "linear-gradient(90deg, #1E66FF 0%, #0DABFF 100%)",
+                        boxShadow: "0 14px 24px rgba(30, 102, 255, 0.24)",
+                        "&:hover": { boxShadow: "0 18px 32px rgba(30, 102, 255, 0.28)" },
+                        "&.Mui-disabled": {
+                          color: "rgba(255,255,255,0.92)",
+                          background: "linear-gradient(90deg, rgba(30,102,255,0.55), rgba(13,171,255,0.55))",
+                        },
+                      }}
+                    >
+                      {loading ? 'Criando...' : 'CRIAR CONTA'}
+                    </Button>
+
+                    <Button
+                      component={RouterLink}
+                      to="/login"
+                      variant="text"
+                      sx={{
+                        fontWeight: 900,
+                        textTransform: "none",
+                        color: "primary.main",
+                        "&:hover": { bgcolor: "rgba(30,102,255,0.06)" },
+                      }}
+                    >
+                      JÁ TENHO CONTA — ENTRAR
+                    </Button>
+                  </Stack>
+                </Box>
               </Stack>
-            </Box>
-          </Stack>
-        </Paper>
-      </Container>
+            </Paper>
+          </Container>
+        </div>
+      </div>
     </ThemeProvider>
   );
 }
