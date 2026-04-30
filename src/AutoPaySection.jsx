@@ -1,5 +1,6 @@
 // src/AutoPaySection.jsx
 import * as React from "react";
+import "./styles/xnamai-account-modal.css";
 import {
   Paper,
   Stack,
@@ -871,272 +872,230 @@ export default function AutoPaySection() {
   }
 
   return (
-    <Paper variant="outlined" sx={{ p: { xs: 2, md: 3 } }}>
-      <Stack spacing={2}>
-        {/* Cabeçalho */}
-        <Stack
-          direction="row"
-          alignItems="center"
-          justifyContent="space-between"
-        >
-          <Typography variant="h6" fontWeight={900}>
-            Compra automática (cartão)
-          </Typography>
-          <Stack direction="row" spacing={1} alignItems="center">
-            <Typography variant="body2" sx={{ opacity: 0.8 }}>
-              Ativar
-            </Typography>
-            <Switch
-              checked={active}
-              onChange={(e) => setActive(e.target.checked)}
-            />
-          </Stack>
-        </Stack>
-
-        <Typography variant="body2" sx={{ opacity: 0.8, mt: -1 }}>
-          {active
-            ? 'Autopay ATIVO: números serão cobrados automaticamente em sorteios futuros.'
-            : 'Autopay INATIVO: nenhum número será cobrado automaticamente.'}
-        </Typography>
-
-        <Stack direction={{ xs: "column", sm: "row" }} spacing={1} sx={{ mt: -1 }}>
-          <Chip
-            size="small"
-            label="Provider: Vindi"
-            variant="outlined"
-            sx={{ width: "fit-content", fontWeight: 800, opacity: 0.9 }}
-          />
-          <Typography variant="body2" sx={{ opacity: 0.8 }}>
-            Números escolhidos: <b>{selectedLabel}</b>
-          </Typography>
-        </Stack>
-
-        {/* Texto explicativo */}
-        <Typography variant="body2" sx={{ opacity: 0.8, mt: -1 }}>
-          Cadastre seu cartão e escolha números "cativos". Quando um novo sorteio
-          abrir, cobraremos automaticamente e reservaremos seus números
-          (cobrança automática).
-          <br />
-          <span style={{ opacity: 0.75 }}>
-            O CVV e a validade são exigidos apenas para salvar/atualizar o
-            cartão.
-          </span>
-        </Typography>
-
-        {/* Cartão salvo */}
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            gap: 1,
-            p: 1.25,
-            border: "1px solid rgba(255,255,255,.08)",
-            borderRadius: 2.5,
-            bgcolor: "rgba(255,255,255,.03)",
-          }}
-        >
-          <CreditCardIcon sx={{ opacity: 0.9 }} />
-          <Typography sx={{ fontWeight: 800 }}>
-            {card.has_card
-              ? `${card.brand || "Cartão"} •••• ${card.last4}`
-              : "Nenhum cartão salvo"}
-          </Typography>
-        </Box>
-
-        {/* Form do cartão */}
+    <Paper variant="outlined" className="xn-autopayCard">
+      <Box className="xn-autopayHeader">
         <Stack spacing={1}>
-          <Typography variant="subtitle2" sx={{ opacity: 0.85 }}>
-            Atualizar cartão (opcional)
-          </Typography>
-
-          <Stack direction={{ xs: "column", sm: "row" }} spacing={1}>
-            <TextField
-              label="Número do cartão"
-              inputMode="numeric"
-              value={cardNumber}
-              onChange={(e) =>
-                setCardNumber(onlyDigits(e.target.value).slice(0, 19))
-              }
-              fullWidth
-            />
-            <TextField
-              label="Nome impresso no cartão"
-              value={holder}
-              onChange={(e) => setHolder(e.target.value)}
-              fullWidth
-            />
+          <Stack direction="row" alignItems="center" justifyContent="space-between" gap={2} flexWrap="wrap">
+            <Box>
+              <Typography variant="h6" className="xn-autopayTitle">
+                Compra automática (cartão)
+              </Typography>
+              <Typography variant="body2" className="xn-autopaySub" sx={{ mt: 0.2, fontWeight: 700 }}>
+                {active ? "Autopay ATIVO" : "Autopay INATIVO"} • Provider: Vindi
+              </Typography>
+            </Box>
+            <Stack direction="row" spacing={1.2} alignItems="center">
+              <Chip
+                size="small"
+                label={active ? "ATIVO" : "INATIVO"}
+                sx={{
+                  fontWeight: 950,
+                  borderRadius: 999,
+                  bgcolor: active ? "rgba(37,109,255,0.14)" : "rgba(11,27,51,0.06)",
+                  border: active ? "1px solid rgba(37,109,255,0.28)" : "1px solid rgba(11,27,51,0.10)",
+                  color: active ? "#16325c" : "rgba(22,50,92,0.70)",
+                }}
+              />
+              <Stack direction="row" spacing={1} alignItems="center">
+                <Typography variant="body2" sx={{ color: "rgba(22,50,92,0.72)", fontWeight: 800 }}>
+                  Ativar
+                </Typography>
+                <Switch checked={active} onChange={(e) => setActive(e.target.checked)} color="primary" />
+              </Stack>
+            </Stack>
           </Stack>
 
-          <Stack direction={{ xs: "column", sm: "row" }} spacing={1}>
-            <TextField
-              label="CPF/CNPJ do titular"
-              value={doc}
-              onChange={(e) => setDoc(onlyDigits(e.target.value).slice(0, 18))}
-              fullWidth
-            />
-            <TextField
-              label="Validade (MM/AA)"
-              placeholder="ex.: 04/27"
-              value={expiry}
-              onChange={(e) => setExpiry(e.target.value)}
-              sx={{ maxWidth: 180 }}
-            />
-            <TextField
-              label="CVV"
-              inputMode="numeric"
-              value={cvv}
-              onChange={(e) => setCvv(onlyDigits(e.target.value).slice(0, 4))}
-              sx={{ maxWidth: 140 }}
-            />
-          </Stack>
-        </Stack>
-
-        <Divider />
-
-        {/* Números cativos */}
-        <Typography variant="subtitle2" sx={{ opacity: 0.85 }}>
-          Números cativos (clique para selecionar)
-        </Typography>
-
-        {/* Legenda (mínima) */}
-        <Stack direction="row" spacing={1} sx={{ flexWrap: "wrap" }}>
-          <Chip
-            size="small"
-            label="Seu cativo"
-            sx={{
-              borderRadius: 999,
-              border: "1px solid #9BD1FF",
-              bgcolor: "rgba(155,209,255,.15)",
-              color: "#D6EBFF",
-              fontWeight: 800,
-            }}
-          />
-          <Chip
-            size="small"
-            label="Ocupado"
-            sx={{
-              borderRadius: 999,
-              border: "1px solid rgba(255,80,80,.9)",
-              bgcolor: "rgba(255,80,80,.12)",
-              color: "#FFD6D6",
-              fontWeight: 800,
-            }}
-          />
-          <Chip
-            size="small"
-            label="Livre"
-            sx={{
-              borderRadius: 999,
-              border: "1px solid rgba(255,255,255,.14)",
-              bgcolor: "rgba(255,255,255,.04)",
-              fontWeight: 800,
-            }}
-          />
-        </Stack>
-
-        <Box
-          sx={{
-            display: "grid",
-            gridTemplateColumns: {
-              xs: "repeat(6, 1fr)",
-              sm: "repeat(10, 1fr)",
-              md: "repeat(12, 1fr)",
-            },
-            gap: 0.6,
-          }}
-        >
-          {Array.from({ length: 100 }, (_, i) => i).map((n) => {
-            const on = numbers.includes(n) || myNumbersFromServer.includes(n);
-            const isClaimed = claimedNumbers.includes(n);
-            const occupiedByOther = isClaimed && !on;
-            return (
-              <Tooltip
-                key={n}
-                title={occupiedByOther ? "Ocupado" : on ? "Remover" : "Adicionar"}
-                arrow
-              >
-                <Chip
-                  label={pad2(n)}
-                  onClick={occupiedByOther ? undefined : () => toggle(n)}
-                  clickable={!occupiedByOther}
-                  sx={{
-                    fontWeight: 800,
-                    borderRadius: 999,
-                    cursor: occupiedByOther ? "not-allowed" : "pointer",
-                    border: occupiedByOther
-                      ? "1px solid rgba(255,80,80,.9)"
-                      : on
-                        ? "1px solid #9BD1FF"
-                        : "1px solid rgba(255,255,255,.14)",
-                    bgcolor: occupiedByOther
-                      ? "rgba(255,80,80,.12)"
-                      : on
-                        ? "rgba(155,209,255,.15)"
-                        : "rgba(255,255,255,.04)",
-                    color: occupiedByOther ? "#FFD6D6" : on ? "#D6EBFF" : "inherit",
-                    "&:hover": {
-                      bgcolor: occupiedByOther
-                        ? "rgba(255,80,80,.12)"
-                        : on
-                          ? "rgba(155,209,255,.25)"
-                          : "rgba(255,255,255,.08)",
-                    },
-                  }}
-                />
-              </Tooltip>
-            );
-          })}
-        </Box>
-
-        {/* Ações */}
-        <Stack
-          direction="row"
-          spacing={1}
-          justifyContent="space-between"
-          alignItems="center"
-        >
-          <Stack
-            direction="row"
-            spacing={1}
-            alignItems="center"
-            sx={{ opacity: needsAtLeastOne ? 0.95 : 0.6 }}
-          >
-            <InfoOutlinedIcon fontSize="small" />
-            <Typography variant="body2">
-              {saveBlockedReason || (
-                <>
-                  Selecione <b>pelo menos 1 número</b> para salvar.
-                </>
-              )}
+          <Stack direction={{ xs: "column", md: "row" }} spacing={1} alignItems={{ xs: "flex-start", md: "center" }}>
+            <Typography variant="body2" className="xn-autopaySub">
+              Números escolhidos: <b>{selectedLabel}</b>
+            </Typography>
+            <Typography variant="body2" className="xn-autopaySub">
+              Total selecionado: <b>{numbers.length}</b>
             </Typography>
           </Stack>
-
-          <Stack direction="row" spacing={1}>
-            <Button
-              variant="outlined"
-              color="error"
-              startIcon={<ClearRoundedIcon />}
-              onClick={cancelAutopay}
-              disabled={saving || loading}
-            >
-              Cancelar compra automática
-            </Button>
-
-            <Button
-              variant="contained"
-              startIcon={
-                saving ? <CircularProgress size={16} /> : <AutorenewRoundedIcon />
-              }
-              onClick={save}
-              disabled={!canSave}
-              title={saveBlockedReason || undefined}
-            >
-              {saving ? "Salvando…" : "Atualizar/Salvar Autopay"}
-            </Button>
-          </Stack>
         </Stack>
+      </Box>
 
-        {isAdmin && (
+      <Box className="xn-autopayBody">
+        <Stack spacing={2.2}>
+          {/* Texto explicativo */}
+          <Typography variant="body2" className="xn-autopaySub" sx={{ lineHeight: 1.55 }}>
+            Cadastre seu cartão e escolha números cativos. Quando um novo sorteio abrir, cobraremos automaticamente e reservaremos seus números.
+            <br />
+            <span style={{ opacity: 0.82 }}>
+              O CVV e a validade são exigidos apenas para salvar/atualizar o cartão.
+            </span>
+          </Typography>
+
+          {/* Cartão salvo */}
+          <Box className="xn-savedCardBox">
+            <CreditCardIcon sx={{ color: "rgba(22,50,92,0.70)" }} />
+            <Box sx={{ minWidth: 0 }}>
+              <Typography className="xn-savedCardTitle">
+                {card.has_card ? `${card.brand || "Cartão"} •••• ${card.last4}` : "Nenhum cartão salvo"}
+              </Typography>
+              <Typography variant="body2" className="xn-autopaySub" sx={{ mt: 0.2 }}>
+                {card.has_card ? "Cartão salvo e pronto para uso." : "Cadastre um cartão para ativar a compra automática."}
+              </Typography>
+            </Box>
+          </Box>
+
+          {/* Form do cartão */}
+          <Stack spacing={1.2}>
+            <Typography variant="subtitle1" className="xn-autopayTitle" sx={{ fontSize: 14 }}>
+              Dados do cartão
+            </Typography>
+
+            <Stack direction={{ xs: "column", md: "row" }} spacing={1.2}>
+              <TextField
+                className="xn-inputSoft"
+                label="Número do cartão"
+                inputMode="numeric"
+                value={cardNumber}
+                onChange={(e) => setCardNumber(onlyDigits(e.target.value).slice(0, 19))}
+                fullWidth
+              />
+              <TextField
+                className="xn-inputSoft"
+                label="Nome impresso no cartão"
+                value={holder}
+                onChange={(e) => setHolder(e.target.value)}
+                fullWidth
+              />
+            </Stack>
+
+            <Stack direction={{ xs: "column", md: "row" }} spacing={1.2}>
+              <TextField
+                className="xn-inputSoft"
+                label="CPF/CNPJ do titular"
+                value={doc}
+                onChange={(e) => setDoc(onlyDigits(e.target.value).slice(0, 18))}
+                fullWidth
+              />
+              <TextField
+                className="xn-inputSoft"
+                label="Validade (MM/AA)"
+                placeholder="ex.: 04/27"
+                value={expiry}
+                onChange={(e) => setExpiry(e.target.value)}
+                sx={{ maxWidth: { md: 220 } }}
+                fullWidth
+              />
+              <TextField
+                className="xn-inputSoft"
+                label="CVV"
+                inputMode="numeric"
+                value={cvv}
+                onChange={(e) => setCvv(onlyDigits(e.target.value).slice(0, 4))}
+                sx={{ maxWidth: { md: 180 } }}
+                fullWidth
+              />
+            </Stack>
+          </Stack>
+
+          <Divider sx={{ borderColor: "rgba(219,232,255,0.85)" }} />
+
+          {/* Números cativos */}
+          <Stack spacing={1.2}>
+            <Typography variant="subtitle1" className="xn-autopayTitle" sx={{ fontSize: 14 }}>
+              Números cativos (clique para selecionar)
+            </Typography>
+
+            <Box className="xn-legendRow">
+              <span className="xn-legendItem"><span className="xn-legendDot xn-legendDot--mine" />Seu cativo</span>
+              <span className="xn-legendItem"><span className="xn-legendDot xn-legendDot--taken" />Ocupado</span>
+              <span className="xn-legendItem"><span className="xn-legendDot xn-legendDot--free" />Livre</span>
+            </Box>
+
+            <Box className="xn-grid100">
+              {Array.from({ length: 100 }, (_, i) => i).map((n) => {
+                const on = numbers.includes(n) || myNumbersFromServer.includes(n);
+                const isClaimed = claimedNumbers.includes(n);
+                const occupiedByOther = isClaimed && !on;
+                const border = occupiedByOther
+                  ? "1px solid rgba(11,27,51,0.10)"
+                  : on
+                    ? "1px solid rgba(37,109,255,0.38)"
+                    : "1px solid rgba(37,109,255,0.22)";
+                const bgcolor = occupiedByOther
+                  ? "rgba(11,27,51,0.06)"
+                  : on
+                    ? "linear-gradient(180deg, rgba(37, 109, 255, 0.14), rgba(94, 168, 255, 0.10))"
+                    : "#ffffff";
+                const color = occupiedByOther ? "rgba(22,50,92,0.55)" : "rgba(22,50,92,0.92)";
+
+                return (
+                  <Tooltip key={n} title={occupiedByOther ? "Ocupado" : on ? "Remover" : "Adicionar"} arrow>
+                    <Chip
+                      className="xn-chip100"
+                      label={pad2(n)}
+                      onClick={occupiedByOther ? undefined : () => toggle(n)}
+                      clickable={!occupiedByOther}
+                      sx={{
+                        cursor: occupiedByOther ? "not-allowed" : "pointer",
+                        border,
+                        bgcolor,
+                        color,
+                        "&:hover": {
+                          bgcolor: occupiedByOther
+                            ? "rgba(11,27,51,0.06)"
+                            : on
+                              ? "linear-gradient(180deg, rgba(37, 109, 255, 0.18), rgba(94, 168, 255, 0.14))"
+                              : "rgba(37,109,255,0.06)",
+                        },
+                      }}
+                    />
+                  </Tooltip>
+                );
+              })}
+            </Box>
+          </Stack>
+
+          {/* Ações */}
+          <Stack direction={{ xs: "column", md: "row" }} spacing={1.2} justifyContent="space-between" alignItems={{ xs: "stretch", md: "center" }}>
+            <Stack direction="row" spacing={1} alignItems="center" sx={{ opacity: needsAtLeastOne ? 0.95 : 0.72 }}>
+              <InfoOutlinedIcon fontSize="small" sx={{ color: "rgba(22,50,92,0.72)" }} />
+              <Typography variant="body2" className="xn-autopaySub">
+                {saveBlockedReason || (
+                  <>
+                    Selecione <b>pelo menos 1 número</b> para salvar.
+                  </>
+                )}
+              </Typography>
+            </Stack>
+
+            <Box className="xn-modalFooter">
+              <Button
+                variant="outlined"
+                color="error"
+                startIcon={<ClearRoundedIcon />}
+                onClick={cancelAutopay}
+                disabled={saving || loading}
+                sx={{ borderRadius: 14, fontWeight: 900, textTransform: "none" }}
+              >
+                Cancelar compra automática
+              </Button>
+
+              <Button
+                variant="contained"
+                startIcon={saving ? <CircularProgress size={16} /> : <AutorenewRoundedIcon />}
+                onClick={save}
+                disabled={!canSave}
+                title={saveBlockedReason || undefined}
+                sx={{
+                  borderRadius: 14,
+                  fontWeight: 950,
+                  textTransform: "none",
+                  bgcolor: "#256DFF",
+                  "&:hover": { bgcolor: "#1F6FFF" },
+                }}
+              >
+                {saving ? "Salvando…" : "Salvar configuração"}
+              </Button>
+            </Box>
+          </Stack>
+
+          {isAdmin && (
           <>
             <Divider />
             <Stack spacing={1}>
@@ -1161,7 +1120,8 @@ export default function AutoPaySection() {
             </Stack>
           </>
         )}
-      </Stack>
+        </Stack>
+      </Box>
     </Paper>
   );
 }

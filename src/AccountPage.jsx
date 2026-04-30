@@ -4,14 +4,17 @@ import { useNavigate, Link as RouterLink } from "react-router-dom";
 import { SelectionContext } from "./selectionContext";
 import { useAuth } from "./authContext";
 import BrandLogo from "./components/branding/BrandLogo";
+import "./styles/xnamai-account.css";
+import "./styles/xnamai-account-modal.css";
 import {
   AppBar, Box, Button, Chip, Container, CssBaseline, IconButton, Menu, MenuItem,
   Divider, Paper, Stack, ThemeProvider, Toolbar, Typography, createTheme,
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow, LinearProgress,
-  TextField, Alert, Dialog, DialogTitle, DialogContent, DialogActions
+  TextField, Alert, Dialog, DialogContent
 } from "@mui/material";
 import ArrowBackIosNewRoundedIcon from "@mui/icons-material/ArrowBackIosNewRounded";
 import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
+import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import { apiJoin, authHeaders, getJSON } from "./lib/api";
 
 // ▼ PIX
@@ -22,15 +25,15 @@ import AutoPaySection from "./AutoPaySection";
 
 const theme = createTheme({
   palette: {
-    mode: "dark",
-    primary: { main: "#67C23A" },
-    secondary: { main: "#FFC107" },
-    error: { main: "#D32F2F" },
-    background: { default: "#0E0E0E", paper: "#121212" },
-    success: { main: "#7CFF6B" },
-    warning: { main: "#B58900" },
+    mode: "light",
+    primary: { main: "#256DFF" },
+    secondary: { main: "#5EA8FF" },
+    error: { main: "#E43D3D" },
+    background: { default: "#F6FAFF", paper: "#FFFFFF" },
+    success: { main: "#2F7FFF" },
+    warning: { main: "#F4B740" },
   },
-  shape: { borderRadius: 12 },
+  shape: { borderRadius: 18 },
   typography: { fontFamily: ["Inter","system-ui","Segoe UI","Roboto","Arial"].join(",") },
 });
 
@@ -43,23 +46,95 @@ const COUPON_VALIDITY_DAYS = Number(process.env.REACT_APP_COUPON_VALIDITY_DAYS |
 const PayChip = ({ status }) => {
   const st = String(status || "").toLowerCase();
   if (["approved","paid","pago"].includes(st)) {
-    return <Chip label="PAGO" sx={{ bgcolor: "success.main", color: "#0E0E0E", fontWeight: 800, borderRadius: 999, px: 1.5 }} />;
+    return (
+      <Chip
+        label="PAGO"
+        sx={{
+          bgcolor: "rgba(37,109,255,0.12)",
+          color: "#16325c",
+          fontWeight: 900,
+          borderRadius: 999,
+          px: 1.5,
+          border: "1px solid rgba(37,109,255,0.26)",
+        }}
+      />
+    );
   }
-  return <Chip label="PENDENTE" sx={{ bgcolor: "warning.main", color: "#000", fontWeight: 800, borderRadius: 999, px: 1.5 }} />;
+  return (
+    <Chip
+      label="PENDENTE"
+      sx={{
+        bgcolor: "rgba(244,183,64,0.18)",
+        color: "#6a4b00",
+        fontWeight: 900,
+        borderRadius: 999,
+        px: 1.5,
+        border: "1px solid rgba(244,183,64,0.35)",
+      }}
+    />
+  );
 };
 
 const ResultChip = ({ result }) => {
   const r = String(result || "").toLowerCase();
   if (r.includes("contempla") || r.includes("win")) {
-    return <Chip label="CONTEMPLADO" sx={{ bgcolor: "success.main", color: "#0E0E0E", fontWeight: 800, borderRadius: 999, px: 1.5 }} />;
+    return (
+      <Chip
+        label="CONTEMPLADO"
+        sx={{
+          bgcolor: "rgba(37,109,255,0.14)",
+          color: "#16325c",
+          fontWeight: 900,
+          borderRadius: 999,
+          px: 1.5,
+          border: "1px solid rgba(37,109,255,0.30)",
+        }}
+      />
+    );
   }
   if (r.includes("não") || r.includes("nao") || r.includes("n_contempla")) {
-    return <Chip label="NÃO CONTEMPLADO" sx={{ bgcolor: "error.main", color: "#fff", fontWeight: 800, borderRadius: 999, px: 1.5 }} />;
+    return (
+      <Chip
+        label="NÃO CONTEMPLADO"
+        sx={{
+          bgcolor: "rgba(228,61,61,0.10)",
+          color: "#9a1b1b",
+          fontWeight: 900,
+          borderRadius: 999,
+          px: 1.5,
+          border: "1px solid rgba(228,61,61,0.25)",
+        }}
+      />
+    );
   }
   if (/(sorteado|closed|fechado)/.test(r)) {
-    return <Chip label={r.includes("sorteado") ? "SORTEADO" : "FECHADO"} sx={{ bgcolor: "secondary.main", color: "#000", fontWeight: 800, borderRadius: 999, px: 1.5 }} />;
+    return (
+      <Chip
+        label={r.includes("sorteado") ? "SORTEADO" : "FECHADO"}
+        sx={{
+          bgcolor: "rgba(94,168,255,0.16)",
+          color: "#16325c",
+          fontWeight: 900,
+          borderRadius: 999,
+          px: 1.5,
+          border: "1px solid rgba(94,168,255,0.32)",
+        }}
+      />
+    );
   }
-  return <Chip label="ABERTO" sx={{ bgcolor: "primary.main", color: "#0E0E0E", fontWeight: 800, borderRadius: 999, px: 1.5 }} />;
+  return (
+    <Chip
+      label="ABERTO"
+      sx={{
+        bgcolor: "rgba(37,109,255,0.10)",
+        color: "#16325c",
+        fontWeight: 900,
+        borderRadius: 999,
+        px: 1.5,
+        border: "1px solid rgba(37,109,255,0.22)",
+      }}
+    />
+  );
 };
 
 // tenta uma lista de endpoints e retorna o primeiro que responder 2xx com JSON
@@ -210,7 +285,7 @@ export default function AccountPage() {
   // AutoPay
   const [autoOpen, setAutoOpen] = React.useState(false);
   const [claims, setClaims] = React.useState({ taken: [], mine: [] });
-  async function loadClaims() {
+  const loadClaims = React.useCallback(async () => {
     try {
       const j = await getJSON("/autopay/claims");
       setClaims({
@@ -218,8 +293,12 @@ export default function AccountPage() {
         mine: Array.isArray(j?.mine) ? j.mine : [],
       });
     } catch {}
-  }
-  React.useEffect(() => { loadClaims(); }, []);
+  }, []);
+  React.useEffect(() => { loadClaims(); }, [loadClaims]);
+  const handleCloseAutoModal = React.useCallback(async () => {
+    await loadClaims();
+    setAutoOpen(false);
+  }, [loadClaims]);
 
   // NOVO: busca a ÚLTIMA reserva ATIVA do sorteio, priorizando os números informados
   async function findLatestActiveReservation(drawId, numbersHint) {
@@ -724,60 +803,63 @@ export default function AccountPage() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <AppBar position="sticky" elevation={0} sx={{ borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
-        <Toolbar sx={{ position: "relative", minHeight: { xs: 56, md: 64 }, px: { xs: 1, sm: 2 } }}>
-          <IconButton edge="start" color="inherit" onClick={() => navigate(-1)} aria-label="Voltar">
-            <ArrowBackIosNewRoundedIcon />
-          </IconButton>
-          <Box
-              component={RouterLink}
-              to="/"
-              sx={{
-                position: "absolute",
-                left: "50%",
-                top: "50%",
-                transform: "translate(-50%, -50%)",
-                display: "flex",
-                alignItems: "center",
-              }}
-            >
-              <BrandLogo size={52} />
-            </Box>
-          <IconButton color="inherit" sx={{ ml: "auto" }} onClick={(e) => setMenuEl(e.currentTarget)}>
-            <AccountCircleRoundedIcon />
-          </IconButton>
-          <Menu
-            anchorEl={menuEl}
-            open={Boolean(menuEl)}
-            onClose={() => setMenuEl(null)}
-            anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-            transformOrigin={{ vertical: "top", horizontal: "right" }}
-          >
-            {isAdminUser && <MenuItem onClick={() => { setMenuEl(null); navigate("/admin"); }}>Painel Admin</MenuItem>}
-            {isAdminUser && <Divider />}
-            <MenuItem onClick={() => { setMenuEl(null); navigate("/conta"); }}>Área do cliente</MenuItem>
-            <Divider />
-            <MenuItem onClick={doLogout}>Sair</MenuItem>
-          </Menu>
-        </Toolbar>
-      </AppBar>
+      <Box className="xn-accountPage">
+        <Box className="xn-accountPageContent">
+          <AppBar position="fixed" elevation={0} className="xn-accountHeader" sx={{ color: "#16325c" }}>
+            <Toolbar sx={{ position: "relative", minHeight: { xs: 68, md: 68 }, px: { xs: 1, sm: 2 } }}>
+              <IconButton edge="start" onClick={() => navigate(-1)} aria-label="Voltar" sx={{ color: "inherit" }}>
+                <ArrowBackIosNewRoundedIcon />
+              </IconButton>
+              <Box
+                component={RouterLink}
+                to="/"
+                sx={{
+                  position: "absolute",
+                  left: "50%",
+                  top: "50%",
+                  transform: "translate(-50%, -50%)",
+                  display: "flex",
+                  alignItems: "center",
+                }}
+              >
+                <BrandLogo size={52} />
+              </Box>
+              <IconButton sx={{ ml: "auto", color: "inherit" }} onClick={(e) => setMenuEl(e.currentTarget)} aria-label="Menu do usuário">
+                <AccountCircleRoundedIcon />
+              </IconButton>
+              <Menu
+                anchorEl={menuEl}
+                open={Boolean(menuEl)}
+                onClose={() => setMenuEl(null)}
+                anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                transformOrigin={{ vertical: "top", horizontal: "right" }}
+              >
+                {isAdminUser && <MenuItem onClick={() => { setMenuEl(null); navigate("/admin"); }}>Painel Admin</MenuItem>}
+                {isAdminUser && <Divider />}
+                <MenuItem onClick={() => { setMenuEl(null); navigate("/conta"); }}>Área do cliente</MenuItem>
+                <Divider />
+                <MenuItem onClick={doLogout}>Sair</MenuItem>
+              </Menu>
+            </Toolbar>
+          </AppBar>
 
-      <Container maxWidth="lg" sx={{ py: { xs: 2.5, md: 5 } }}>
-        <Stack spacing={2.5}>
-          <Typography
-            sx={{
-              fontWeight: 900, letterSpacing: 0.5, textTransform: "uppercase", opacity: 0.9,
-              textAlign: { xs: "center", md: "left" }, fontSize: { xs: 18, sm: 20, md: 22 }, lineHeight: 1.2, wordBreak: "break-word",
-            }}
-          >
-            {headingName}
-          </Typography>
+          <Container maxWidth={false} disableGutters className="xn-accountContainer">
+            <Box sx={{ height: 68 }} />
+            <Stack spacing={{ xs: 2, md: 2.5 }}>
+              <Box sx={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 2, flexWrap: "wrap" }}>
+                <Typography className="xn-sectionTitle" sx={{ fontSize: { xs: 20, md: 26 }, lineHeight: 1.15 }}>
+                  Conta
+                </Typography>
+                <Typography className="xn-muted" sx={{ fontWeight: 700 }}>
+                  {headingName}
+                </Typography>
+              </Box>
 
           {/* Configurações do sorteio (apenas admin) */}
           {isAdminUser && (
-            <Paper variant="outlined" sx={{ p: { xs: 2, md: 3 } }}>
+            <Paper className="xn-card" variant="outlined" sx={{ p: { xs: 2, md: 3 } }}>
               <Stack spacing={2}>
-                <Typography variant="h6" fontWeight={900}>Configurações do sorteio</Typography>
+                <Typography variant="h6" className="xn-sectionTitle">Configurações do sorteio</Typography>
 
                 <TextField
                   label="Título do banner (página principal)"
@@ -804,6 +886,7 @@ export default function AccountPage() {
                     color="success"
                     onClick={handleSaveConfig}
                     disabled={cfgLoading}
+                    className="xn-btnPrimary"
                   >
                     {cfgLoading ? "Salvando…" : "Salvar configurações"}
                   </Button>
@@ -819,198 +902,151 @@ export default function AccountPage() {
             </Paper>
           )}
 
-          {/* Cartão */}
-          <Box sx={{ width: "100%", display: "flex", justifyContent: "center" }}>
-            <Paper
-              elevation={0}
-              sx={{
-                width: { xs: "min(86vw, 520px)", md: 700 },
-                aspectRatio: { xs: "16/9", md: "21/9" },
-                borderRadius: 6, position: "relative", overflow: "hidden",
-                p: { xs: 1.6, md: 2.2 },
-                bgcolor: "#0C0C0C",
-                border: "1px solid rgba(255,255,255,0.08)",
-                backgroundImage: `
-                  radial-gradient(160% 140% at 10% 10%, rgba(255,255,255,0.08), transparent 60%),
-                  radial-gradient(120% 140% at 80% 80%, rgba(255,255,255,0.06), transparent 55%),
-                  radial-gradient(100% 100% at 50% 50%, rgba(255,255,255,0.02), transparent 70%)
-                `,
-                backgroundBlendMode: "screen, lighten",
-              }}
-            >
-              {/* Top-right: código + valor */}
-              <Stack
-                spacing={0.7}
-                sx={{
-                  position: "absolute",
-                  right: { xs: 26, sm: 32, md: 44 },
-                  top:   { xs: 22, sm: 26, md: 34 },
-                  alignItems: "flex-end",
-                }}
-              >
-                <Typography sx={{ fontFamily: 'ui-monospace, Menlo, Consolas, monospace', fontSize: { xs: 10, md: 12 }, color: "success.main", letterSpacing: 1.2 }}>
-                  CÓDIGO DE DESCONTO:
-                </Typography>
-                <Typography
-                  sx={{
-                    fontWeight: 900,
-                    letterSpacing: { xs: 1.5, md: 2.5 },
-                    fontSize: { xs: 22, sm: 26, md: 32 },
-                    lineHeight: 1,
-                    textShadow: "0 0 0.6px rgba(255,255,255,0.6)",
-                  }}
-                >
-                  {couponCode}
-                </Typography>
-                <Typography sx={{ fontFamily: 'ui-monospace, Menlo, Consolas, monospace', fontSize: { xs: 10, md: 12 }, color: "success.main", letterSpacing: 1.2 }}>
-                  VALOR ACUMULADO:
-                </Typography>
-                <Typography sx={{ fontWeight: 900, color: "success.main", fontSize: { xs: 15, sm: 16, md: 18 }, lineHeight: 1 }}>
-                  {valorAcumulado.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}
-                </Typography>
-              </Stack>
+              {/* Seção 1 — Cartão / Cupom / Resumo */}
+              <Paper className="xn-card xn-heroCard" variant="outlined" sx={{ p: { xs: 2, md: 2.5 } }}>
+                <Box className="xn-heroGrid">
+                  <Box className="xn-virtualCard">
+                    <Box className="xn-virtualCard__top">
+                      <Box sx={{ display: "flex", alignItems: "center", gap: 1.2, minWidth: 0 }}>
+                        <BrandLogo size={52} />
+                        <Typography className="xn-virtualCard__name" sx={{ fontSize: { xs: 16, md: 18 }, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                          xNaMai
+                        </Typography>
+                      </Box>
+                      <span className="xn-pill">
+                        <span className="xn-mono" style={{ opacity: 0.7 }}>Válido até</span>
+                        <span style={{ fontWeight: 900 }}>{validade}</span>
+                      </span>
+                    </Box>
 
-              {/* Logo + ondas */}
-              <Box
-                sx={{
-                  position: "absolute",
-                  left: { xs: 26, md: 44 },
-                  top: "50%",
-                  transform: "translateY(-50%)",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: { xs: 1, md: 1.3 },
-                }}
-              >
-                <BrandLogo size={60} variant="inverse" />
-                <Box component="svg" viewBox="0 0 60 30" sx={{ width: { xs: 38, md: 50 }, height: { xs: 20, md: 26 } }}>
-                  <path d="M20 5 C28 10, 28 20, 20 25" fill="none" stroke="#7CFF6B" strokeWidth="3" strokeLinecap="round"/>
-                  <path d="M34 3 C44 10, 44 20, 34 27" fill="none" stroke="#7CFF6B" strokeWidth="3" strokeLinecap="round" opacity={0.95}/>
-                  <path d="M48 1 C60 10, 60 20, 48 29" fill="none" stroke="#7CFF6B" strokeWidth="3" strokeLinecap="round" opacity={0.9}/>
+                    <Box sx={{ mt: 2.2 }}>
+                      <Typography sx={{ fontWeight: 950, fontSize: { xs: 20, md: 26 }, letterSpacing: -0.6, color: "#16325c" }}>
+                        {headingName}
+                      </Typography>
+                      <Typography className="xn-muted" sx={{ mt: 0.6, fontWeight: 700 }}>
+                        Área da conta • Cupom e números cativos
+                      </Typography>
+                    </Box>
+                  </Box>
+
+                  <Box className="xn-statCard">
+                    <Stack spacing={1.3}>
+                      <Box>
+                        <Typography className="xn-statLabel xn-mono">CÓDIGO DE DESCONTO</Typography>
+                        <Typography className="xn-code xn-mono">{couponCode}</Typography>
+                      </Box>
+                      <Divider sx={{ borderColor: "rgba(219,232,255,0.85)" }} />
+                      <Box>
+                        <Typography className="xn-statLabel xn-mono">VALOR ACUMULADO</Typography>
+                        <Typography className="xn-value">
+                          {valorAcumulado.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}
+                        </Typography>
+                      </Box>
+                      <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
+                        <span className="xn-pill">
+                          <span style={{ opacity: 0.75 }}>Seus cativos</span>
+                          <span style={{ fontWeight: 900 }}>{claims?.mine?.length || 0}</span>
+                        </span>
+                        <span className="xn-pill">
+                          <span style={{ opacity: 0.75 }}>Ocupados</span>
+                          <span style={{ fontWeight: 900 }}>{claims?.taken?.length || 0}</span>
+                        </span>
+                      </Box>
+                    </Stack>
+                  </Box>
                 </Box>
-              </Box>
-
-              {/* Nome */}
-              <Typography
-                sx={{
-                  position: "absolute",
-                  left:   { xs: 26, md: 44 },
-                  right: { xs: 16, md: 28 },
-                  bottom: { xs: 46, md: 56 },
-                  fontWeight: 900,
-                  letterSpacing: 1.5,
-                  textTransform: "uppercase",
-                  fontSize: { xs: 18, sm: 22, md: 28 },
-                  textAlign: "left",
-                  whiteSpace: "nowrap",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                }}
-              >
-                {headingName}
-              </Typography>
-
-              {/* Validade */}
-              <Stack spacing={0.3} sx={{ position: "absolute", left:   { xs: 36, md: 54 }, bottom: { xs: 12, md: 18 } }}>
-                <Typography sx={{ fontFamily: 'ui-monospace, Menlo, Consolas, monospace', fontSize: { xs: 10, md: 12 }, letterSpacing: 1.2, opacity: 0.85 }}>
-                  VÁLIDO
-                </Typography>
-                <Stack direction="row" spacing={1}>
-                  <Typography sx={{ fontFamily: 'ui-monospace, Menlo, Consolas, monospace', fontSize: { xs: 10, md: 12 }, letterSpacing: 1.2, opacity: 0.85 }}>
-                    ATÉ
-                  </Typography>
-                  <Typography sx={{ fontWeight: 800, fontSize: { xs: 12, md: 14 }, letterSpacing: 1 }}>
-                    {validade}
-                  </Typography>
-                </Stack>
-              </Stack>
-            </Paper>
-          </Box>
+              </Paper>
 
           {/* ====== Números cativos ====== */}
-          <Paper variant="outlined" sx={{ p: { xs: 2, md: 3 } }}>
-            <Stack spacing={1.5}>
-              <Typography variant="h6" fontWeight={900}>Números cativos</Typography>
-              <Typography variant="body2" sx={{ opacity: .8 }}>
+              <Paper className="xn-card" variant="outlined" sx={{ p: { xs: 2, md: 2.5 } }}>
+                <Stack spacing={1.6}>
+                  <Box sx={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 2, flexWrap: "wrap" }}>
+                    <Box>
+                      <Typography variant="h6" className="xn-sectionTitle">Números cativos</Typography>
+                      <Typography variant="body2" className="xn-muted" sx={{ mt: 0.6, maxWidth: 780 }}>
                 Garanta seus números preferidos em todo sorteio novo. Configure um cartão e o sistema compra automaticamente quando o sorteio abre.
               </Typography>
-
-              <Stack direction="row" spacing={1} alignItems="center" sx={{ mt: .5, flexWrap: "wrap" }}>
-                <Chip size="small" label="Seu cativo" sx={{ bgcolor:"#10233a", color:"#cbe6ff", border:"1px solid #9bd1ff" }} />
-                <Chip size="small" label="Ocupado" sx={{ bgcolor:"#2a1c1c", color:"#ffb3b3", border:"1px solid #ff8a8a" }} />
-                <Chip size="small" label="Livre" variant="outlined" />
-              </Stack>
-
-              <Box
-                sx={{
-                  display: "grid",
-                  gridTemplateColumns: {
-                    xs: "repeat(8, 1fr)",
-                    sm: "repeat(12, 1fr)",
-                    md: "repeat(20, 1fr)",
-                  },
-                  gap: .5,
-                  mt: 1,
-                }}
-              >
-                {Array.from({ length: 100 }, (_, n) => {
-                  const isMine  = claims.mine.includes(n);
-                  const isTaken = claims.taken.includes(n);
-                  const bg = isMine ? "#10233a" : isTaken ? "#2a1c1c" : "transparent";
-                  const bd = isMine ? "1px solid #9bd1ff" : isTaken ? "1px solid #ff8a8a" : "1px solid rgba(255,255,255,.14)";
-                  const fg = isMine ? "#cbe6ff" : isTaken ? "#ffb3b3" : "inherit";
-                  return (
-                    <Box
-                      key={n}
-                      sx={{
-                        userSelect: "none",
-                        textAlign: "center",
-                        py: .6,
-                        borderRadius: 999,
-                        fontWeight: 800,
-                        letterSpacing: .5,
-                        fontSize: 12,
-                        border: bd,
-                        bgcolor: bg,
-                        color: fg,
-                      }}
-                    >
-                      {String(n).padStart(2, "0")}
                     </Box>
-                  );
-                })}
-              </Box>
+                    <Button variant="contained" className="xn-btnPrimary" onClick={() => setAutoOpen(true)}>
+                      CONFIGURAR NÚMERO CATIVO
+                    </Button>
+                  </Box>
 
-              <Stack direction={{ xs: "column", sm: "row" }} justifyContent="flex-end" sx={{ mt: 1 }}>
-                <Button variant="contained" onClick={() => setAutoOpen(true)}>
-                  Configurar número cativo
-                </Button>
-              </Stack>
-            </Stack>
-          </Paper>
+                  <Stack direction="row" spacing={1} alignItems="center" sx={{ flexWrap: "wrap" }}>
+                    <Chip size="small" label="Seu cativo" sx={{ bgcolor: "rgba(37,109,255,0.14)", color: "#16325c", border: "1px solid rgba(37,109,255,0.28)", fontWeight: 900 }} />
+                    <Chip size="small" label="Ocupado" sx={{ bgcolor: "rgba(11,27,51,0.06)", color: "rgba(22,50,92,0.70)", border: "1px solid rgba(11,27,51,0.10)", fontWeight: 900 }} />
+                    <Chip size="small" label="Livre" sx={{ bgcolor: "#fff", color: "rgba(22,50,92,0.72)", border: "1px solid rgba(37,109,255,0.22)", fontWeight: 900 }} />
+                  </Stack>
+
+                  <Box sx={{ display: "flex", justifyContent: "space-between", gap: 2, flexWrap: "wrap", alignItems: "center" }}>
+                    <Typography className="xn-muted" sx={{ fontWeight: 700 }}>
+                      Selecionados: <b>{claims?.mine?.length || 0}</b> • Para alterar, use “Configurar número cativo”.
+                    </Typography>
+                  </Box>
+
+                  {(claims?.mine?.length || 0) + (claims?.taken?.length || 0) === 0 ? (
+                    <Box className="xn-emptyState">
+                      <Typography sx={{ fontWeight: 900, color: "#16325c" }}>Nenhum dado de números cativos ainda.</Typography>
+                      <Typography className="xn-muted" sx={{ mt: 0.4, fontWeight: 700 }}>
+                        Clique em “Configurar número cativo” para escolher seus números e ativar a compra automática.
+                      </Typography>
+                    </Box>
+                  ) : (
+                    <Box className="xn-numbersGrid" sx={{ mt: 0.5 }}>
+                      {Array.from({ length: 100 }, (_, n) => {
+                        const isMine = claims.mine.includes(n);
+                        const isTaken = claims.taken.includes(n);
+                        const cls = isMine ? "xn-numberPill xn-numberPill--mine" : isTaken ? "xn-numberPill xn-numberPill--taken" : "xn-numberPill xn-numberPill--free";
+                        return (
+                          <Box key={n} className={cls}>
+                            {String(n).padStart(2, "0")}
+                          </Box>
+                        );
+                      })}
+                    </Box>
+                  )}
+                </Stack>
+              </Paper>
 
           {/* Tabela */}
-          <Paper variant="outlined" sx={{ p: { xs: 1, md: 2 } }}>
-            {loading ? (
-              <Box sx={{ px: 2, py: 1 }}><LinearProgress /></Box>
-            ) : (
-              <TableContainer sx={{ width: "100%", overflowX: "auto" }}>
-                <Table size="small" sx={{ minWidth: { xs: 0, sm: 560 } }}>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell sx={{ fontWeight: 800, whiteSpace: "nowrap" }}>SORTEIO</TableCell>
-                      <TableCell sx={{ fontWeight: 800, whiteSpace: "nowrap" }}>NÚMERO</TableCell>
-                      <TableCell sx={{ fontWeight: 800, whiteSpace: "nowrap" }}>DIA</TableCell>
-                      <TableCell sx={{ fontWeight: 800, whiteSpace: "nowrap" }}>PAGAMENTO</TableCell>
-                      <TableCell sx={{ fontWeight: 800, whiteSpace: "nowrap" }}>STATUS</TableCell>
-                      <TableCell sx={{ fontWeight: 800, whiteSpace: "nowrap" }} align="right">PAGAR</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {rows.length === 0 && (
-                      <TableRow><TableCell colSpan={6} sx={{ color: "#bbb" }}>Nenhuma participação encontrada.</TableCell></TableRow>
-                    )}
-                    {rows.map((row, idx) => {
+              <Paper className="xn-card" variant="outlined" sx={{ p: { xs: 2, md: 2.5 } }}>
+                <Stack spacing={1.4}>
+                  <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 2 }}>
+                    <Typography variant="h6" className="xn-sectionTitle">Minhas participações</Typography>
+                    <Typography className="xn-muted" sx={{ fontWeight: 700 }}>
+                      {rows.length ? `${rows.length} registro(s)` : "—"}
+                    </Typography>
+                  </Box>
+
+                  {loading ? (
+                    <Box sx={{ px: 0.5, py: 0.5 }}><LinearProgress /></Box>
+                  ) : (
+                    <TableContainer sx={{ width: "100%", overflowX: "auto" }}>
+                      <Table size="small" sx={{ minWidth: { xs: 720, sm: 920 } }}>
+                        <TableHead>
+                          <TableRow>
+                            <TableCell sx={{ fontWeight: 900, whiteSpace: "nowrap", color: "rgba(22,50,92,0.72)" }}>SORTEIO</TableCell>
+                            <TableCell sx={{ fontWeight: 900, whiteSpace: "nowrap", color: "rgba(22,50,92,0.72)" }}>NÚMERO</TableCell>
+                            <TableCell sx={{ fontWeight: 900, whiteSpace: "nowrap", color: "rgba(22,50,92,0.72)" }}>DIA</TableCell>
+                            <TableCell sx={{ fontWeight: 900, whiteSpace: "nowrap", color: "rgba(22,50,92,0.72)" }}>PAGAMENTO</TableCell>
+                            <TableCell sx={{ fontWeight: 900, whiteSpace: "nowrap", color: "rgba(22,50,92,0.72)" }}>STATUS</TableCell>
+                            <TableCell sx={{ fontWeight: 900, whiteSpace: "nowrap", color: "rgba(22,50,92,0.72)" }} align="right">PAGAR</TableCell>
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {rows.length === 0 && (
+                            <TableRow>
+                              <TableCell colSpan={6}>
+                                <Box className="xn-emptyState">
+                                  <Typography sx={{ fontWeight: 900, color: "#16325c" }}>Nenhuma participação encontrada.</Typography>
+                                  <Typography className="xn-muted" sx={{ mt: 0.4, fontWeight: 700 }}>
+                                    Quando você participar de um sorteio, ele aparecerá aqui.
+                                  </Typography>
+                                </Box>
+                              </TableCell>
+                            </TableRow>
+                          )}
+                          {rows.map((row, idx) => {
                       const isPending = /pendente|pending|await|aguard|open|ativo|active/i.test(String(row.pagamento || ""));
                       const clickable = true;
 
@@ -1043,6 +1079,7 @@ export default function AccountPage() {
                               <Button
                                 size="small"
                                 variant="contained"
+                                className="xn-btnPrimary"
                                 onClick={(e) => { e.stopPropagation(); handleGeneratePix(row); }}
                               >
                                 Gerar PIX
@@ -1052,22 +1089,43 @@ export default function AccountPage() {
                         </TableRow>
                       );
                     })}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            )}
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                  )}
 
-            <Stack direction={{ xs: "column", sm: "row" }} justifyContent="flex-end" alignItems={{ xs: "stretch", sm: "center" }} gap={1.5} sx={{ mt: 2 }}>
-              <Button component="a" href="http://newstorerj.com.br/" target="_blank" rel="noopener" variant="contained" color="success" fullWidth sx={{ maxWidth: { sm: 220 } }}>
-                Resgatar cupom
-              </Button>
-              <Button variant="text" onClick={doLogout} fullWidth sx={{ maxWidth: { sm: 120 } }}>
-                Sair
-              </Button>
+                  <Box className="xn-actionsRow" sx={{ pt: 1 }}>
+                    <Button
+                      component="a"
+                      href="http://newstorerj.com.br/"
+                      target="_blank"
+                      rel="noopener"
+                      variant="outlined"
+                      className="xn-btnSoft"
+                      sx={{
+                        borderColor: "rgba(37,109,255,0.26)",
+                        color: "#16325c",
+                        bgcolor: "rgba(255,255,255,0.65)",
+                        "&:hover": { borderColor: "rgba(37,109,255,0.46)", bgcolor: "rgba(37,109,255,0.06)" },
+                      }}
+                    >
+                      RESGATAR CUPOM
+                    </Button>
+                    <Button
+                      variant="text"
+                      onClick={doLogout}
+                      className="xn-btnSoft"
+                      sx={{ color: "rgba(22,50,92,0.72)", "&:hover": { bgcolor: "rgba(11,27,51,0.04)" } }}
+                    >
+                      SAIR
+                    </Button>
+                  </Box>
+                </Stack>
+              </Paper>
             </Stack>
-          </Paper>
-        </Stack>
-      </Container>
+          </Container>
+        </Box>
+      </Box>
 
       {/* Modal de PIX */}
       <PixModal
@@ -1082,19 +1140,27 @@ export default function AccountPage() {
       />
 
       {/* Modal: configuração de compra automática */}
-      <Dialog open={autoOpen} onClose={() => setAutoOpen(false)} fullWidth maxWidth="md">
-        <DialogTitle sx={{ fontWeight: 900 }}>Compra automática — número cativo</DialogTitle>
-        <DialogContent dividers sx={{ p: 0 }}>
-          <AutoPaySection />
+      <Dialog
+        open={autoOpen}
+        onClose={handleCloseAutoModal}
+        fullWidth
+        maxWidth="lg"
+        PaperProps={{ className: "xn-accountModalMuiPaper" }}
+        BackdropProps={{ sx: { backgroundColor: "rgba(9, 18, 35, 0.38)" } }}
+        sx={{
+          "& .MuiDialog-container": { alignItems: { xs: "flex-end", md: "center" } },
+        }}
+      >
+        <DialogContent className="xn-accountModalContent" dividers={false}>
+          <Box className="xn-accountModalClose">
+            <IconButton onClick={handleCloseAutoModal} aria-label="Fechar" sx={{ bgcolor: "rgba(255,255,255,0.72)", border: "1px solid rgba(219,232,255,0.95)" }}>
+              <CloseRoundedIcon />
+            </IconButton>
+          </Box>
+          <Box className="xn-autopayWrap">
+            <AutoPaySection />
+          </Box>
         </DialogContent>
-        <DialogActions sx={{ px: 2, py: 1.5 }}>
-          <Button
-            variant="contained"
-            onClick={async () => { await loadClaims(); setAutoOpen(false); }}
-          >
-            Fechar
-          </Button>
-        </DialogActions>
       </Dialog>
     </ThemeProvider>
   );

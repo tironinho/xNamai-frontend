@@ -1,0 +1,285 @@
+/* src/styles/xnamai-account.css */
+
+:root {
+  --xn-primary: #256dff;
+  --xn-primary-2: #5ea8ff;
+  --xn-bg: #f6faff;
+  --xn-bg-2: #f2f7ff;
+  --xn-card: #ffffff;
+  --xn-card-soft: #f7fbff;
+  --xn-border: #dbe8ff;
+  --xn-text: #16325c;
+  --xn-text-soft: #5f7190;
+  --xn-shadow: 0 12px 36px rgba(42, 90, 180, 0.10);
+  --xn-radius-lg: 28px;
+  --xn-radius-md: 22px;
+  --xn-radius-sm: 16px;
+}
+
+.xn-accountPage {
+  position: relative;
+  min-height: 100vh;
+  background: var(--xn-bg);
+}
+
+/* Fundo com shapes suaves (claro e premium) */
+.xn-accountPage::before,
+.xn-accountPage::after {
+  content: "";
+  position: fixed;
+  inset: -10%;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(1100px 760px at 16% 88%, rgba(31, 111, 255, 0.16) 0%, rgba(31, 111, 255, 0.06) 44%, transparent 72%),
+    radial-gradient(980px 720px at 92% 62%, rgba(94, 168, 255, 0.18) 0%, rgba(94, 168, 255, 0.07) 45%, transparent 76%),
+    radial-gradient(760px 520px at 74% 18%, rgba(47, 127, 255, 0.12) 0%, rgba(47, 127, 255, 0.05) 48%, transparent 78%);
+}
+
+.xn-accountPage::after {
+  opacity: 0.7;
+  filter: blur(0.2px);
+}
+
+.xn-accountPageContent {
+  position: relative;
+  z-index: 1;
+}
+
+.xn-accountHeader {
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(219, 232, 255, 0.9);
+}
+
+.xn-accountContainer {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 28px 20px 44px;
+}
+
+@media (min-width: 900px) {
+  .xn-accountContainer {
+    padding: 44px 28px 64px;
+  }
+}
+
+.xn-sectionTitle {
+  font-weight: 900;
+  letter-spacing: -0.3px;
+  color: var(--xn-text);
+}
+
+.xn-muted {
+  color: var(--xn-text-soft);
+}
+
+.xn-card {
+  background: var(--xn-card);
+  border: 1px solid rgba(219, 232, 255, 0.95);
+  border-radius: var(--xn-radius-lg);
+  box-shadow: var(--xn-shadow);
+}
+
+.xn-cardInner {
+  border-radius: var(--xn-radius-md);
+  background: linear-gradient(180deg, rgba(37, 109, 255, 0.06), rgba(255, 255, 255, 0.0) 46%);
+}
+
+.xn-heroCard {
+  overflow: hidden;
+  position: relative;
+}
+
+.xn-heroCard::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(900px 420px at 18% 26%, rgba(37, 109, 255, 0.14) 0%, rgba(37, 109, 255, 0.05) 46%, transparent 76%),
+    radial-gradient(820px 520px at 92% 70%, rgba(94, 168, 255, 0.16) 0%, rgba(94, 168, 255, 0.06) 46%, transparent 76%);
+}
+
+.xn-heroGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+  position: relative;
+}
+
+@media (min-width: 900px) {
+  .xn-heroGrid {
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 22px;
+  }
+}
+
+.xn-virtualCard {
+  border-radius: var(--xn-radius-lg);
+  background:
+    radial-gradient(120% 140% at 10% 10%, rgba(255,255,255,0.78), rgba(255,255,255,0.26) 52%, rgba(255,255,255,0.10) 72%),
+    linear-gradient(135deg, rgba(37, 109, 255, 0.14), rgba(94, 168, 255, 0.10));
+  border: 1px solid rgba(219, 232, 255, 0.95);
+  box-shadow: 0 18px 46px rgba(42, 90, 180, 0.12);
+  padding: 18px;
+}
+
+@media (min-width: 900px) {
+  .xn-virtualCard {
+    padding: 22px;
+  }
+}
+
+.xn-virtualCard__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.xn-virtualCard__name {
+  font-weight: 950;
+  color: var(--xn-text);
+  letter-spacing: -0.6px;
+}
+
+.xn-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(219, 232, 255, 0.95);
+  background: rgba(255, 255, 255, 0.65);
+  color: rgba(22, 50, 92, 0.86);
+  font-weight: 700;
+  font-size: 12px;
+}
+
+.xn-statCard {
+  border-radius: var(--xn-radius-lg);
+  border: 1px solid rgba(219, 232, 255, 0.95);
+  background: linear-gradient(180deg, rgba(37, 109, 255, 0.06), rgba(255, 255, 255, 0.0) 44%), var(--xn-card);
+  padding: 18px;
+}
+
+.xn-statLabel {
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(22, 50, 92, 0.62);
+  font-weight: 800;
+}
+
+.xn-mono {
+  font-family: ui-monospace, Menlo, Consolas, "SFMono-Regular", monospace;
+}
+
+.xn-code {
+  font-weight: 950;
+  letter-spacing: 0.12em;
+  color: var(--xn-primary);
+  font-size: 22px;
+}
+
+@media (min-width: 900px) {
+  .xn-code {
+    font-size: 28px;
+  }
+}
+
+.xn-value {
+  font-weight: 950;
+  color: var(--xn-text);
+  font-size: 18px;
+}
+
+.xn-numbersGrid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 8px;
+}
+
+@media (min-width: 600px) {
+  .xn-numbersGrid {
+    grid-template-columns: repeat(12, 1fr);
+  }
+}
+
+@media (min-width: 900px) {
+  .xn-numbersGrid {
+    grid-template-columns: repeat(20, 1fr);
+  }
+}
+
+.xn-numberPill {
+  user-select: none;
+  text-align: center;
+  padding: 9px 0;
+  border-radius: 999px;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  font-size: 12px;
+  transition: transform 120ms ease, box-shadow 120ms ease, background 120ms ease, border-color 120ms ease;
+}
+
+.xn-numberPill--free {
+  background: #ffffff;
+  border: 1px solid rgba(37, 109, 255, 0.26);
+  color: rgba(22, 50, 92, 0.9);
+}
+
+.xn-numberPill--taken {
+  background: rgba(11, 27, 51, 0.06);
+  border: 1px solid rgba(11, 27, 51, 0.10);
+  color: rgba(22, 50, 92, 0.55);
+}
+
+.xn-numberPill--mine {
+  background: linear-gradient(180deg, rgba(37, 109, 255, 0.14), rgba(94, 168, 255, 0.10));
+  border: 1px solid rgba(37, 109, 255, 0.42);
+  color: rgba(22, 50, 92, 0.94);
+  box-shadow: 0 10px 26px rgba(37, 109, 255, 0.14);
+}
+
+.xn-numberPill:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 26px rgba(42, 90, 180, 0.10);
+}
+
+.xn-numberPill--taken:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+.xn-emptyState {
+  border-radius: var(--xn-radius-md);
+  border: 1px dashed rgba(219, 232, 255, 0.95);
+  background: rgba(255, 255, 255, 0.65);
+  padding: 14px 16px;
+  color: rgba(22, 50, 92, 0.70);
+}
+
+.xn-actionsRow {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.xn-btnPrimary {
+  border-radius: 14px !important;
+  text-transform: none !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.02em !important;
+}
+
+.xn-btnSoft {
+  border-radius: 14px !important;
+  text-transform: none !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.01em !important;
+}
+

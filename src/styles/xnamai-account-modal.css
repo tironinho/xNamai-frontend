@@ -1,0 +1,167 @@
+/* src/styles/xnamai-account-modal.css */
+
+.xn-accountModalMuiPaper {
+  border-radius: 28px !important;
+  overflow: hidden;
+  background: #ffffff;
+  box-shadow: 0 24px 80px rgba(15, 35, 70, 0.22) !important;
+  border: 1px solid rgba(219, 232, 255, 0.95);
+}
+
+.xn-accountModalContent {
+  padding: 0 !important;
+}
+
+.xn-accountModalClose {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px 10px 0;
+  background: linear-gradient(180deg, rgba(255,255,255,0.92), rgba(255,255,255,0));
+  backdrop-filter: blur(10px);
+}
+
+.xn-autopayWrap {
+  padding: 18px;
+}
+
+@media (min-width: 900px) {
+  .xn-autopayWrap {
+    padding: 22px;
+  }
+}
+
+.xn-autopayCard {
+  border-radius: 24px !important;
+  border: 1px solid rgba(219, 232, 255, 0.95) !important;
+  background: linear-gradient(180deg, rgba(37, 109, 255, 0.06), rgba(255, 255, 255, 0.0) 44%), #fff !important;
+  box-shadow: 0 12px 36px rgba(42, 90, 180, 0.10) !important;
+}
+
+.xn-autopayHeader {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: rgba(255, 255, 255, 0.86);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(219, 232, 255, 0.85);
+  padding: 16px 16px 14px;
+}
+
+.xn-autopayBody {
+  padding: 16px;
+}
+
+.xn-autopayTitle {
+  font-weight: 950;
+  letter-spacing: -0.4px;
+  color: #16325c;
+}
+
+.xn-autopaySub {
+  color: rgba(22, 50, 92, 0.70);
+}
+
+.xn-inputSoft .MuiInputBase-root {
+  border-radius: 16px;
+  background: rgba(246, 250, 255, 0.70);
+}
+
+.xn-inputSoft .MuiOutlinedInput-notchedOutline {
+  border-color: rgba(219, 232, 255, 0.95);
+}
+
+.xn-inputSoft .MuiInputBase-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+  border-color: rgba(37, 109, 255, 0.60);
+  box-shadow: 0 0 0 4px rgba(37, 109, 255, 0.10);
+}
+
+.xn-savedCardBox {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 14px;
+  border: 1px solid rgba(219, 232, 255, 0.95);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.70);
+}
+
+.xn-savedCardTitle {
+  font-weight: 900;
+  color: rgba(22, 50, 92, 0.92);
+}
+
+.xn-legendRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.xn-legendDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  display: inline-block;
+}
+
+.xn-legendItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(219, 232, 255, 0.95);
+  background: rgba(255,255,255,0.70);
+  color: rgba(22, 50, 92, 0.78);
+  font-weight: 800;
+  font-size: 12px;
+}
+
+.xn-legendDot--mine {
+  background: rgba(37, 109, 255, 0.75);
+}
+.xn-legendDot--taken {
+  background: rgba(11, 27, 51, 0.30);
+}
+.xn-legendDot--free {
+  background: rgba(37, 109, 255, 0.18);
+  border: 1px solid rgba(37, 109, 255, 0.26);
+}
+
+.xn-grid100 {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 10px;
+}
+
+@media (min-width: 600px) {
+  .xn-grid100 {
+    grid-template-columns: repeat(10, 1fr);
+  }
+}
+
+@media (min-width: 900px) {
+  .xn-grid100 {
+    grid-template-columns: repeat(12, 1fr);
+  }
+}
+
+.xn-chip100 {
+  user-select: none;
+  border-radius: 999px !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.06em !important;
+}
+
+.xn-modalFooter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: flex-end;
+  align-items: center;
+  padding-top: 8px;
+}
+
